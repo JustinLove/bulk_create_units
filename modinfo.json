@@ -1,0 +1,26 @@
+{
+  "author": "wondible",
+  "build": "69721",
+  "category": ["sandbox", "ui"],
+  "context": "client",
+  "date": "2014/07/31",
+  "description": "Adds hotkeys for pasting 10 or N units with the create-unit cheat.",
+  "display_name": "Bulk Create Units",
+  "forum": null,
+  "identifier": "com.wondible.pa.bulk_create_units",
+  "priority": 100,
+  "scenes": {
+    "global_mod_list": [
+      "coui://ui/mods/bulk_create_units/keybinds.js"
+    ],
+    "live_game": [
+      "coui://ui/mods/bulk_create_units/live_game.js"
+    ],
+    "live_game_sandbox": [
+      "coui://ui/mods/bulk_create_units/live_game_sandbox.js"
+    ]
+  },
+  "signature": "not yet implemented",
+  "version": "0.1.0"
+}
+
