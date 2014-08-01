@@ -9,10 +9,7 @@
   var controls = 'coui://ui/mods/bulk_create_units/bulk_paste_count.html'
   var addControls = function() {
     $.get(controls, function(html) {
-      console.log(arguments)
       $html = $(html)
-      console.log($html)
-      console.log($('.div_sandbox_simcontrol_cont'))
       $('.div_sandbox_simcontrol_cont').append($html)
       ko.applyBindings(model, $html.get(0))
     })
