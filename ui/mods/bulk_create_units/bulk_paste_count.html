@@ -3,5 +3,5 @@
     data-slider-handle="square" data-slider-orientation="horizontal" data-slider-selection="none" data-slider-tooltip="hide" 
     data-bind="slider: { value: bulkPasteSlider, options: bulkPasteOptions }" />
   <input type="text" id="bulk-paste-count-text" value="10" size="3"
-    data-bind="value: bulkPasteCount" />
+    data-bind="value: bulkPasteCount, event: {focus: inputFocus, blur: inputBlur}" />
 </div>

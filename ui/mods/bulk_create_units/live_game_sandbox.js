@@ -11,6 +11,15 @@
     owner: model
   })
 
+  model.inputFocus = function() {
+    engine.call('panel.noKeyboard', api.Panel.pageId, false);
+    engine.call('panel.yieldFocus', api.Panel.pageId, false);
+  }
+  model.inputBlur = function() {
+    engine.call('panel.noKeyboard', api.Panel.pageId, true);
+    engine.call('panel.yieldFocus', api.Panel.pageId, true);
+  }
+
   var controls = 'coui://ui/mods/bulk_create_units/bulk_paste_count.html'
   var addControls = function() {
     $.get(controls, function(html) {
