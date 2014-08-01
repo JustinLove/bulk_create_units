@@ -15,10 +15,9 @@
     })
   }
 
-  var sub = model.sandbox_expanded.subscribe(function(open) {
+  model.sandbox_expanded.subscribe(function(open) {
     if (!open) return
     addControls()
-    sub.dispose()
   })
 
   model.bulkPasteCount.subscribe(function(count) {
