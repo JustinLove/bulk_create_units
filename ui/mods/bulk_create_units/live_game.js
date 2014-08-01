@@ -16,5 +16,7 @@
 
   handlers.bulk_paste_count = model.bulkPasteCount
 
+  $('#sandbox').removeAttr('no-keyboard')
+
   api.Panel.message('', 'inputmap.reload');
 })()
