@@ -17,6 +17,8 @@
       "coui://ui/mods/bulk_create_units/live_game.js"
     ],
     "live_game_sandbox": [
+      "coui://ui/main/shared/js/thirdparty/slider/js/bootstrap-slider.js",
+      "coui://ui/main/shared/js/thirdparty/slider/css/slider.css",
       "coui://ui/mods/bulk_create_units/live_game_sandbox.js"
     ]
   },

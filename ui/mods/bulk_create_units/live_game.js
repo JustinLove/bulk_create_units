@@ -14,5 +14,7 @@
     model.pasteUnits(model.bulkPasteCount())
   }
 
+  handlers.bulk_paste_count = model.bulkPasteCount
+
   api.Panel.message('', 'inputmap.reload');
 })()
