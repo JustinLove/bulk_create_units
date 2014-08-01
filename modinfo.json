@@ -3,10 +3,10 @@
   "build": "69721",
   "category": ["sandbox", "ui"],
   "context": "client",
-  "date": "2014/07/31",
-  "description": "Adds hotkeys for pasting 10 or N units with the create-unit cheat.",
+  "date": "2014/08/01",
+  "description": "Adds hotkey for pasting 10 or N units with the create-unit cheat.",
   "display_name": "Bulk Create Units",
-  "forum": null,
+  "forum": "https://forums.uberent.com/threads/rel-bulk-create-units.62492/",
   "identifier": "com.wondible.pa.bulk_create_units",
   "priority": 100,
   "scenes": {
@@ -23,6 +23,6 @@
     ]
   },
   "signature": "not yet implemented",
-  "version": "0.1.0"
+  "version": "1.0.0"
 }
 
