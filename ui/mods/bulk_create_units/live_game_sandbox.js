@@ -3,7 +3,7 @@
   model.bulkPasteOptions = ko.observable({min: 0.1, max: 3, step: 0.01})
   model.bulkPasteSlider = ko.computed({
     read: function() {
-      return Math.log(model.bulkPasteCount())/Math.LN10
+      return Math.log(parseInt(model.bulkPasteCount(), 10))/Math.LN10
     },
     write: function(v) {
       model.bulkPasteCount(Math.round(Math.pow(10, v)))
@@ -35,6 +35,6 @@
   })
 
   model.bulkPasteCount.subscribe(function(count) {
-    api.Panel.message(api.Panel.parentId, 'bulk_paste_count', count)
+    api.Panel.message(api.Panel.parentId, 'bulk_paste_count', parseInt(count, 10))
   })
 })()
