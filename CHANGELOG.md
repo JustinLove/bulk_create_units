@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Localization changed keyboard groups, move to 'Mods'
+
 ## 1.1.0
 
 - Update for change in keybind settings circa 71378
