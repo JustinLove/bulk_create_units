@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Bump build number for 86422 (Titans)
+
 ## 1.2.0
 
 - Localization changed keyboard groups, move to 'Mods'
