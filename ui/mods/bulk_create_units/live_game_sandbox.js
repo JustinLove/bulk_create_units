@@ -37,4 +37,18 @@
   model.bulkPasteCount.subscribe(function(count) {
     api.Panel.message(api.Panel.parentId, 'bulk_paste_count', parseInt(count, 10))
   })
+
+  var live_game_sandbox_sandbox_copy_unit = model.sandbox_copy_unit
+  model.sandbox_copy_unit = function() {
+    live_game_sandbox_sandbox_copy_unit()
+    api.Panel.message(api.Panel.parentId, 'bulkCreateUnitSelected', model.sandbox_unit_hover()); 
+  }
+
+  handlers.bulkCreateUnitSpec = function(spec) {
+    $('.div_sandbox_unit_item').removeClass('selected')
+    $('.div_sandbox_unit_item[data-spec="' + spec + '"]').addClass('selected')
+  }
+
+  var $item = $('.div_sandbox_unit_item')
+  $item.attr('data-bind', $item.attr('data-bind') + ', attr: {\'data-spec\': spec}')
 })()

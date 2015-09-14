@@ -1,3 +1,7 @@
+## 1.3.0
+
+- Highlight currently selected unit
+
 ## 1.2.1
 
 - Bump build number for 86422 (Titans)
