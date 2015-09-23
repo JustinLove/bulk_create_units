@@ -1,4 +1,4 @@
-(function() {
+define([], function() {
   // keep puppetmaster's special effects if it's present
   model.pasteUnits = model.pasteUnits || function(n) {
     if (!model.cheatAllowCreateUnit()) return
@@ -50,6 +50,4 @@
 
     return promise
   }
-
-  api.Panel.message('', 'inputmap.reload');
-})()
+})

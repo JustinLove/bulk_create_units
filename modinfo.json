@@ -14,7 +14,7 @@
       "coui://ui/mods/bulk_create_units/keybinds.js"
     ],
     "live_game": [
-      "coui://ui/mods/bulk_create_units/live_game.js"
+      "coui://ui/mods/bulk_create_units/live_game_bootstrap.js"
     ],
     "live_game_sandbox": [
       "coui://ui/main/shared/js/thirdparty/slider/js/bootstrap-slider.js",
