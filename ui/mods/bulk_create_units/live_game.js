@@ -38,11 +38,13 @@ define([], function() {
     var y = Math.floor(mouseY * scale);
 
     hdeck.raycast(x, y).then(function(result) {
+      //console.log(result)
       var drop = {
         army: army_id,
         what: selectedUnit(),
         planet: result.planet,
         location: result.pos,
+        orientation: result.orient,
       }
       pasteUnits3D(n, drop)
     })
@@ -53,9 +55,27 @@ define([], function() {
     if (n < 1) return
     if (!config.what || config.what == '') return
 
-    for (var i = 0;i < n;i++) {
-      model.send_message('create_unit', config)
-    }
+    var locations = [{
+      pos: config.location,
+      orient: config.orientation,
+    }]
+
+    //console.log(locations[0])
+    hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
+      //console.log(fixup[0])
+      config.location = fixup[0].pos || config.location
+      config.orientation = fixup[0].orient || config.orientation
+
+      var sizeData = model.sizeData()[config.what]
+      if (sizeData && sizeData.feature_requirements && !fixup[0].ok) {
+        console.log(fixup[0].desc)
+        return
+      }
+
+      for (var i = 0;i < n;i++) {
+        model.send_message('create_unit', config)
+      }
+    })
   }
 
   model.bulkPasteCount = ko.observable(10)
@@ -116,6 +136,7 @@ define([], function() {
         mesh_bounds: spec.mesh_bounds,
         placement_size: spec.placement_size,
         physics: spec.physics,
+        feature_requirements: spec.feature_requirements,
       }
     }, function(a, b) {
       var result = {
@@ -125,6 +146,7 @@ define([], function() {
         mesh_bounds: a.mesh_bounds || b.mesh_bounds,
         placement_size: a.placement_size || b.placement_size,
         physics: _.extend({}, a.physics, b.physics),
+        feature_requirements: a.feature_requirements || b.feature_requirements,
       }
       //console.log('combine', a.display_name, b.display_name, a, b, result)
       return result
