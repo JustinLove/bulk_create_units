@@ -9,6 +9,7 @@ var bulk_paste_stub = function() {}
 _.defaults(handlers, {
   bulk_paste_count: bulk_paste_stub,
   bulkCreateUnitSelected: bulk_paste_stub,
+  bulkCreateUnitSandboxExpanded: bulk_paste_stub,
 })
 
 api.Panel.message('', 'inputmap.reload');

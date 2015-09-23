@@ -32,6 +32,7 @@
   model.sandbox_expanded.subscribe(function(open) {
     if (!open) return
     addControls()
+    api.Panel.message(api.Panel.parentId, 'bulkCreateUnitSandboxExpanded', open)
   })
 
   model.bulkPasteCount.subscribe(function(count) {

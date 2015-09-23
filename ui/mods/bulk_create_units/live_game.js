@@ -70,6 +70,7 @@ define([], function() {
 
   selectedUnit.subscribe(function(spec) {
     api.Panel.message('sandbox', 'bulkCreateUnitSpec', spec)
+    loadSize()
   })
 
   handlers.bulkCreateUnitSelected = function(spec) {
@@ -98,5 +99,41 @@ define([], function() {
     }
 
     return promise
+  }
+
+  model.sizeData = ko.observable({})
+  var sizeLoaded = false
+  var loadSize = function() {
+    if (sizeLoaded) return
+    sizeLoaded = true
+    unitInfoParser.loadUnitData(
+    model.sizeData,
+    function(spec) {
+      return {
+        display_name: spec.display_name,
+        area_build_separation: spec.area_build_separation,
+        area_build_type: spec.area_build_type,
+        mesh_bounds: spec.mesh_bounds,
+        placement_size: spec.placement_size,
+        physics: spec.physics,
+      }
+    }, function(a, b) {
+      var result = {
+        display_name: a.display_name || b.display_name,
+        area_build_separation: a.area_build_separation || b.area_build_separation,
+        area_build_type: a.area_build_type || b.area_build_type,
+        mesh_bounds: a.mesh_bounds || b.mesh_bounds,
+        placement_size: a.placement_size || b.placement_size,
+        physics: _.extend({}, a.physics, b.physics),
+      }
+      //console.log('combine', a.display_name, b.display_name, a, b, result)
+      return result
+    })
+  }
+
+  handlers.bulkCreateUnitSandboxExpanded = function(open) {
+    if (open) {
+      loadSize()
+    }
   }
 })
