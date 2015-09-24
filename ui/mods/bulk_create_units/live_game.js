@@ -55,26 +55,34 @@ define([], function() {
     if (n < 1) return
     if (!config.what || config.what == '') return
 
-    var locations = [{
-      pos: config.location,
-      orient: config.orientation,
-    }]
+    var locations = []
+    for (var i = 0;i < n;i++) {
+      locations[i] = {
+        pos: config.location,
+        orient: config.orientation,
+      }
+    }
 
-    //console.log(locations[0])
+    locations.forEach(function(loc) {
+      loc.pos = loc.pos.map(function(n) {return n + Math.random() * 10})
+    })
+
+    var sizeData = model.sizeData()[config.what]
+
+    //console.log(locations)
     hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
-      //console.log(fixup[0])
-      config.location = fixup[0].pos || config.location
-      config.orientation = fixup[0].orient || config.orientation
+      //console.log(fixup)
 
-      var sizeData = model.sizeData()[config.what]
-      if (sizeData && sizeData.feature_requirements && !fixup[0].ok) {
-        console.log(fixup[0].desc)
-        return
-      }
-
-      for (var i = 0;i < n;i++) {
+      fixup.forEach(function(loc) {
+        console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+        if (sizeData && sizeData.feature_requirements && !loc.ok) {
+          console.log(loc.desc)
+          return
+        }
+        config.location = loc.pos || config.location
+        config.orientation = loc.orient || config.orientation
         model.send_message('create_unit', config)
-      }
+      })
     })
   }
 
