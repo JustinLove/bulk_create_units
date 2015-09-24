@@ -50,7 +50,19 @@ define(['bulk_create_units/qmath'], function(VMath) {
     })
   }
 
-  //model.reviewMode(false)
+  // http://stackoverflow.com/a/31864777/30203
+  var spiral = function(N, f) {
+    var x = 0;
+    var y = 0;
+    for (var i = 0;i < N;i++) {
+      f(i, x, y)
+      if(Math.abs(x) <= Math.abs(y) && (x != y || x >= 0)) {
+        x += ((y >= 0) ? 1 : -1);
+      } else {
+        y += ((x >= 0) ? -1 : 1);
+      }
+    }
+  }
 
   var pasteUnits3D = function(n, config) {
     if (!model.cheatAllowCreateUnit()) return
@@ -65,28 +77,19 @@ define(['bulk_create_units/qmath'], function(VMath) {
       }
     }
 
-    // left of facing
-    var x = VMath.apply_q([1, 0, 0, 0], config.orientation)
-    console.log(x)
+    var gx = VMath.apply_q([40, 0, 0, 0], config.orientation)
+    var gy = VMath.apply_q([0, 40, 0, 0], config.orientation)
+    var bw = Math.ceil(Math.sqrt(n))
 
-    // reverse of facing
-    var y = VMath.apply_q([0, 1, 0, 0], config.orientation)
-    console.log(y)
-
-    // up
-    var z = VMath.apply_q([0, 0, 1, 0], config.orientation)
-    console.log(z)
-
-    var i = 0
-    locations.forEach(function(loc) {
+    spiral(n, function(i, x, y) {
+      var loc = locations[i]
       loc.pos = [
-        loc.pos[0] + x[0]*i*40,
-        loc.pos[1] + x[1]*i*40,
-        loc.pos[2] + x[2]*i*40,
+        loc.pos[0] + gx[0]*x + gy[0]*y,
+        loc.pos[1] + gx[1]*x + gy[1]*y,
+        loc.pos[2] + gx[2]*x + gy[2]*y,
       ]
-      i += 1
     })
-    console.log(locations)
+    //console.log(locations)
 
     var sizeData = model.sizeData()[config.what]
 
@@ -94,7 +97,7 @@ define(['bulk_create_units/qmath'], function(VMath) {
       //console.log(fixup)
 
       fixup.forEach(function(loc) {
-        console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
 
         if (sizeData && sizeData.feature_requirements && !loc.ok) {
           console.log(loc.desc)
