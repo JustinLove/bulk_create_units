@@ -77,9 +77,35 @@ define(['bulk_create_units/qmath'], function(VMath) {
       }
     }
 
-    var gx = VMath.apply_q([40, 0, 0, 0], config.orientation)
-    var gy = VMath.apply_q([0, 40, 0, 0], config.orientation)
-    var bw = Math.ceil(Math.sqrt(n))
+    var sizeData = model.sizeData()[config.what]
+    //console.log(sizeData)
+
+    var width = 20
+    var height = 20
+
+    //console.log(width, height)
+
+    if (sizeData.placement_size) {
+      width = sizeData.placement_size[0]
+      height = sizeData.placement_size[1]
+    } else if (sizeData.mesh_bounds) {
+      width = sizeData.mesh_bounds[0]
+      height = sizeData.mesh_bounds[1]
+    }
+
+    //console.log(width, height)
+
+    if (sizeData.area_build_separation) {
+      width += sizeData.area_build_separation*3
+      height += sizeData.area_build_separation*3
+    }
+
+    //console.log(width, height)
+
+    var gx = VMath.apply_q([width, 0, 0, 0], config.orientation)
+    var gy = VMath.apply_q([0, height, 0, 0], config.orientation)
+
+    //console.log(gx, gy)
 
     spiral(n, function(i, x, y) {
       var loc = locations[i]
@@ -90,8 +116,6 @@ define(['bulk_create_units/qmath'], function(VMath) {
       ]
     })
     //console.log(locations)
-
-    var sizeData = model.sizeData()[config.what]
 
     hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
       //console.log(fixup)
