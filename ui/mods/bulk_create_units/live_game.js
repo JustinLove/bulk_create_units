@@ -1,4 +1,4 @@
-define([], function() {
+define(['bulk_create_units/qmath'], function(VMath) {
   // Pointer tracking
   var mouseX = 0
   var mouseY = 0
@@ -50,6 +50,8 @@ define([], function() {
     })
   }
 
+  //model.reviewMode(false)
+
   var pasteUnits3D = function(n, config) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
@@ -63,18 +65,37 @@ define([], function() {
       }
     }
 
+    // left of facing
+    var x = VMath.apply_q([1, 0, 0, 0], config.orientation)
+    console.log(x)
+
+    // reverse of facing
+    var y = VMath.apply_q([0, 1, 0, 0], config.orientation)
+    console.log(y)
+
+    // up
+    var z = VMath.apply_q([0, 0, 1, 0], config.orientation)
+    console.log(z)
+
+    var i = 0
     locations.forEach(function(loc) {
-      loc.pos = loc.pos.map(function(n) {return n + Math.random() * 10})
+      loc.pos = [
+        loc.pos[0] + x[0]*i*40,
+        loc.pos[1] + x[1]*i*40,
+        loc.pos[2] + x[2]*i*40,
+      ]
+      i += 1
     })
+    console.log(locations)
 
     var sizeData = model.sizeData()[config.what]
 
-    //console.log(locations)
     hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
       //console.log(fixup)
 
       fixup.forEach(function(loc) {
         console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+
         if (sizeData && sizeData.feature_requirements && !loc.ok) {
           console.log(loc.desc)
           return

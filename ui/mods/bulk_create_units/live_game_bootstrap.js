@@ -2,6 +2,7 @@
   var config = require.s.contexts._.config
   config.waitSeconds = 0
   config.paths.bulk_create_units = 'coui://ui/mods/bulk_create_units'
+  config.paths.vecmath = 'coui://ui/main/game/galactic_war/shared/js/vecmath'
 })()
 
 // make the object keys exist for Panel.ready
