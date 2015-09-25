@@ -82,42 +82,67 @@ define(['bulk_create_units/qmath'], function(VMath) {
     }
 
     var sizeData = model.sizeData()[config.what]
-    console.log(sizeData)
+    //console.log(sizeData)
 
-    var width = model.baseSize
-    var height = model.baseSize
+    var dx = model.baseSize
+    var dy = model.baseSize
 
-    console.log(width, height)
+    //console.log(dx, dy)
 
     if (sizeData.placement_size) {
-      width += sizeData.placement_size[0] * model.unitAdj
-      height += sizeData.placement_size[1] * model.unitAdj
+      dx += sizeData.placement_size[0] * model.unitAdj
+      dy += sizeData.placement_size[1] * model.unitAdj
     } else if (sizeData.mesh_bounds) {
-      width += sizeData.mesh_bounds[0] * model.unitAdj
-      height += sizeData.mesh_bounds[1] * model.unitAdj
+      dx += sizeData.mesh_bounds[0] * model.unitAdj
+      dy += sizeData.mesh_bounds[1] * model.unitAdj
     }
 
-    console.log(width, height)
+    //console.log(dx, dy)
 
     if (sizeData.area_build_separation) {
-      width += sizeData.area_build_separation * model.sepAdj
-      height += sizeData.area_build_separation * model.sepAdj
+      dx += sizeData.area_build_separation * model.sepAdj
+      dy += sizeData.area_build_separation * model.sepAdj
     }
 
-    console.log(width, height)
+    //console.log(dx, dy)
 
-    var gx = VMath.apply_q([width, 0, 0, 0], config.orientation)
-    var gy = VMath.apply_q([0, height, 0, 0], config.orientation)
+    var r = VMath.length_v3(config.location)
 
-    //console.log(gx, gy)
+    var gx = VMath.apply_q([1, 0, 0, 0], config.orientation)
+    var gy = VMath.apply_q([0, 1, 0, 0], config.orientation)
+    var gz = VMath.apply_q([0, 0, 1, 0], config.orientation)
+
+    //console.log(gx, gy, gz)
+    //console.log(config.location)
 
     spiral(n, function(i, x, y) {
+      //console.log(i, x, y)
       var loc = locations[i]
+      //console.log(loc)
+      x = x*dx
+      y = y*dy
+      //console.log(x, y)
+      var l = VMath.length_v2([x, y])
+      if (l == 0) {
+        var vx = 0
+        var vy = 0
+      } else {
+        var vx = x/l
+        var vy = y/l
+      }
+      var a = l/r - Math.PI/2
+      var c = Math.cos(a)
+      var s = -(1+Math.sin(a))
+      //console.log(l, r, a, c, s)
+      var x3 = r*c*vx
+      var y3 = r*c*vy
+      var z3 = r*s
       loc.pos = [
-        loc.pos[0] + gx[0]*x + gy[0]*y,
-        loc.pos[1] + gx[1]*x + gy[1]*y,
-        loc.pos[2] + gx[2]*x + gy[2]*y,
+        loc.pos[0] + gx[0]*x3 + gy[0]*y3 + gz[0]*z3,
+        loc.pos[1] + gx[1]*x3 + gy[1]*y3 + gz[1]*z3,
+        loc.pos[2] + gx[2]*x3 + gy[2]*y3 + gz[2]*z3,
       ]
+      //console.log([x, y], [x3, y3, z3], loc.pos)
     })
     //console.log(locations)
 
