@@ -1,31 +1,14 @@
 define([
+  'bulk_create_units/mouse_tracking',
   'bulk_create_units/unit_size',
   'bulk_create_units/qmath',
 ], function(
+  mouse,
   unit_size,
   VMath
 ) {
-  // Pointer tracking
-  var mouseX = 0
-  var mouseY = 0
-  var hdeck = model.holodeck
-  var mousetrack = function(e) {
-    mouseX = e.offsetX
-    mouseY = e.offsetY
-    hdeck = $(this).data('holodeck')
-  }
-
-  if (model.cheatAllowCreateUnit()) {
-    $('body').on('mousemove', 'holodeck', mousetrack)
-  }
-
-  model.cheatAllowCreateUnit.subscribe(function(value) {
-    if (value) {
-      $('body').on('mousemove', 'holodeck', mousetrack)
-    } else {
-      $('body').off('mousemove', 'holodeck', mousetrack)
-    }
-  })
+  mouse.setTracking(model.cheatAllowCreateUnit())
+  model.cheatAllowCreateUnit.subscribe(mouse.setTracking)
 
   armyIndex = ko.computed(function() {
     return model.playerControlFlags().indexOf(true)
@@ -40,10 +23,10 @@ define([
 
     var scale = api.settings.getSynchronous('ui', 'ui_scale') || 1.0;
 
-    var x = Math.floor(mouseX * scale);
-    var y = Math.floor(mouseY * scale);
+    var x = Math.floor(mouse.x * scale);
+    var y = Math.floor(mouse.y * scale);
 
-    hdeck.raycast(x, y).then(function(result) {
+    mouse.hdeck.raycast(x, y).then(function(result) {
       //console.log(result)
       var drop = {
         army: army_id,
@@ -125,7 +108,7 @@ define([
     })
     //console.log(locations)
 
-    hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
+    mouse.hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
       //console.log(fixup)
 
       fixup.forEach(function(loc) {
