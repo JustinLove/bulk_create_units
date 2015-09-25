@@ -50,6 +50,8 @@ define([
     return grid
   }
 
+  var epsilon = 1e-300
+
   var pasteUnits3D = function(n, config) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
@@ -67,28 +69,28 @@ define([
     //console.log(config.location)
 
     var locations = spiral(n).map(function(g) {
+      //console.log([].concat(g), size.footprint)
+      VMath._mul_v2(g, size.footprint)
       //console.log(g)
-      var x = g[0]*size.footprint[0]
-      var y = g[1]*size.footprint[1]
-      //console.log(x, y)
-      var l = VMath.length_v2([x, y])
-      if (l == 0) {
-        var vx = 0
-        var vy = 0
-      } else {
-        var vx = x/l
-        var vy = y/l
-      }
+      return g
+    }).map(function(v) {
+      //console.log(v)
+      var l = VMath.length_v2(v)
+      //console.log(l)
+      var unit = [1, 0]
+      VMath.mul_v2_s(v, 1 / (l + epsilon), unit)
+      //console.log(v, l, unit)
       var a = l/r - Math.PI/2
       var c = Math.cos(a)
       var s = -(1+Math.sin(a))
       //console.log(l, r, a, c, s)
-      var x3 = r*c*vx
-      var y3 = r*c*vy
+      var x3 = r*c*unit[0]
+      var y3 = r*c*unit[1]
       var z3 = r*s
 
+      //console.log(config)
       var pos = config.location
-      //console.log(pos)
+      //console.log(v, [x3, y3, z3], pos)
       var loc = {
         pos: [
           pos[0] + gx[0]*x3 + gy[0]*y3 + gz[0]*z3,
@@ -97,7 +99,7 @@ define([
         ],
         orient: config.orientation,
       }
-      //console.log([x, y], [x3, y3, z3], loc.pos)
+      //console.log(loc.pos)
       return loc
     })
     //console.log(locations)
