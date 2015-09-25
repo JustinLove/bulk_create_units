@@ -64,6 +64,10 @@ define(['bulk_create_units/qmath'], function(VMath) {
     }
   }
 
+  model.baseSize = 10
+  model.unitAdj = 1
+  model.sepAdj = 2
+
   var pasteUnits3D = function(n, config) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
@@ -78,29 +82,29 @@ define(['bulk_create_units/qmath'], function(VMath) {
     }
 
     var sizeData = model.sizeData()[config.what]
-    //console.log(sizeData)
+    console.log(sizeData)
 
-    var width = 20
-    var height = 20
+    var width = model.baseSize
+    var height = model.baseSize
 
-    //console.log(width, height)
+    console.log(width, height)
 
     if (sizeData.placement_size) {
-      width = sizeData.placement_size[0]
-      height = sizeData.placement_size[1]
+      width += sizeData.placement_size[0] * model.unitAdj
+      height += sizeData.placement_size[1] * model.unitAdj
     } else if (sizeData.mesh_bounds) {
-      width = sizeData.mesh_bounds[0]
-      height = sizeData.mesh_bounds[1]
+      width += sizeData.mesh_bounds[0] * model.unitAdj
+      height += sizeData.mesh_bounds[1] * model.unitAdj
     }
 
-    //console.log(width, height)
+    console.log(width, height)
 
     if (sizeData.area_build_separation) {
-      width += sizeData.area_build_separation*3
-      height += sizeData.area_build_separation*3
+      width += sizeData.area_build_separation * model.sepAdj
+      height += sizeData.area_build_separation * model.sepAdj
     }
 
-    //console.log(width, height)
+    console.log(width, height)
 
     var gx = VMath.apply_q([width, 0, 0, 0], config.orientation)
     var gy = VMath.apply_q([0, height, 0, 0], config.orientation)
