@@ -70,10 +70,6 @@ define([
     }
   }
 
-  model.baseSize = 10
-  model.unitAdj = 1
-  model.sepAdj = 2
-
   var pasteUnits3D = function(n, config) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
@@ -87,30 +83,7 @@ define([
       }
     }
 
-    var size = unit_size.data()[config.what]
-    //console.log(size)
-
-    var dx = model.baseSize
-    var dy = model.baseSize
-
-    //console.log(dx, dy)
-
-    if (size.placement_size) {
-      dx += size.placement_size[0] * model.unitAdj
-      dy += size.placement_size[1] * model.unitAdj
-    } else if (size.mesh_bounds) {
-      dx += size.mesh_bounds[0] * model.unitAdj
-      dy += size.mesh_bounds[1] * model.unitAdj
-    }
-
-    //console.log(dx, dy)
-
-    if (size.area_build_separation) {
-      dx += size.area_build_separation * model.sepAdj
-      dy += size.area_build_separation * model.sepAdj
-    }
-
-    //console.log(dx, dy)
+    var size = unit_size.updateFootprint(config.what)
 
     var r = VMath.length_v3(config.location)
 
@@ -125,8 +98,8 @@ define([
       //console.log(i, x, y)
       var loc = locations[i]
       //console.log(loc)
-      x = x*dx
-      y = y*dy
+      x = x*size.footprint[0]
+      y = y*size.footprint[1]
       //console.log(x, y)
       var l = VMath.length_v2([x, y])
       if (l == 0) {
