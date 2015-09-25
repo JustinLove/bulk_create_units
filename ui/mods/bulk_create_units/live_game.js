@@ -21,12 +21,7 @@ define([
     if (armyIndex() == -1) return
     var army_id = model.players()[armyIndex()].id
 
-    var scale = api.settings.getSynchronous('ui', 'ui_scale') || 1.0;
-
-    var x = Math.floor(mouse.x * scale);
-    var y = Math.floor(mouse.y * scale);
-
-    mouse.hdeck.raycast(x, y).then(function(result) {
+    mouse.raycast().then(function(result) {
       //console.log(result)
       var drop = {
         army: army_id,
