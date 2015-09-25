@@ -1,4 +1,10 @@
-define(['bulk_create_units/qmath'], function(VMath) {
+define([
+  'bulk_create_units/unit_size',
+  'bulk_create_units/qmath',
+], function(
+  unit_size,
+  VMath
+) {
   // Pointer tracking
   var mouseX = 0
   var mouseY = 0
@@ -81,27 +87,27 @@ define(['bulk_create_units/qmath'], function(VMath) {
       }
     }
 
-    var sizeData = model.sizeData()[config.what]
-    //console.log(sizeData)
+    var size = unit_size.data()[config.what]
+    //console.log(size)
 
     var dx = model.baseSize
     var dy = model.baseSize
 
     //console.log(dx, dy)
 
-    if (sizeData.placement_size) {
-      dx += sizeData.placement_size[0] * model.unitAdj
-      dy += sizeData.placement_size[1] * model.unitAdj
-    } else if (sizeData.mesh_bounds) {
-      dx += sizeData.mesh_bounds[0] * model.unitAdj
-      dy += sizeData.mesh_bounds[1] * model.unitAdj
+    if (size.placement_size) {
+      dx += size.placement_size[0] * model.unitAdj
+      dy += size.placement_size[1] * model.unitAdj
+    } else if (size.mesh_bounds) {
+      dx += size.mesh_bounds[0] * model.unitAdj
+      dy += size.mesh_bounds[1] * model.unitAdj
     }
 
     //console.log(dx, dy)
 
-    if (sizeData.area_build_separation) {
-      dx += sizeData.area_build_separation * model.sepAdj
-      dy += sizeData.area_build_separation * model.sepAdj
+    if (size.area_build_separation) {
+      dx += size.area_build_separation * model.sepAdj
+      dy += size.area_build_separation * model.sepAdj
     }
 
     //console.log(dx, dy)
@@ -152,7 +158,7 @@ define(['bulk_create_units/qmath'], function(VMath) {
       fixup.forEach(function(loc) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
 
-        if (sizeData && sizeData.feature_requirements && !loc.ok) {
+        if (size && size.feature_requirements && !loc.ok) {
           console.log(loc.desc)
           return
         }
@@ -175,7 +181,7 @@ define(['bulk_create_units/qmath'], function(VMath) {
 
   selectedUnit.subscribe(function(spec) {
     api.Panel.message('sandbox', 'bulkCreateUnitSpec', spec)
-    loadSize()
+    unit_size.load()
   })
 
   handlers.bulkCreateUnitSelected = function(spec) {
@@ -206,41 +212,9 @@ define(['bulk_create_units/qmath'], function(VMath) {
     return promise
   }
 
-  model.sizeData = ko.observable({})
-  var sizeLoaded = false
-  var loadSize = function() {
-    if (sizeLoaded) return
-    sizeLoaded = true
-    unitInfoParser.loadUnitData(
-    model.sizeData,
-    function(spec) {
-      return {
-        display_name: spec.display_name,
-        area_build_separation: spec.area_build_separation,
-        area_build_type: spec.area_build_type,
-        mesh_bounds: spec.mesh_bounds,
-        placement_size: spec.placement_size,
-        physics: spec.physics,
-        feature_requirements: spec.feature_requirements,
-      }
-    }, function(a, b) {
-      var result = {
-        display_name: a.display_name || b.display_name,
-        area_build_separation: a.area_build_separation || b.area_build_separation,
-        area_build_type: a.area_build_type || b.area_build_type,
-        mesh_bounds: a.mesh_bounds || b.mesh_bounds,
-        placement_size: a.placement_size || b.placement_size,
-        physics: _.extend({}, a.physics, b.physics),
-        feature_requirements: a.feature_requirements || b.feature_requirements,
-      }
-      //console.log('combine', a.display_name, b.display_name, a, b, result)
-      return result
-    })
-  }
-
   handlers.bulkCreateUnitSandboxExpanded = function(open) {
     if (open) {
-      loadSize()
+      unit_size.load()
     }
   }
 })
