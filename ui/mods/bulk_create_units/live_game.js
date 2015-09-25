@@ -35,31 +35,25 @@ define([
   }
 
   // http://stackoverflow.com/a/31864777/30203
-  var spiral = function(N, f) {
+  var spiral = function(n) {
     var x = 0;
     var y = 0;
-    for (var i = 0;i < N;i++) {
-      f(i, x, y)
+    var grid = new Array(n)
+    for (var i = 0;i < n;i++) {
+      grid[i] = [x, y]
       if(Math.abs(x) <= Math.abs(y) && (x != y || x >= 0)) {
         x += ((y >= 0) ? 1 : -1);
       } else {
         y += ((x >= 0) ? -1 : 1);
       }
     }
+    return grid
   }
 
   var pasteUnits3D = function(n, config) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
     if (!config.what || config.what == '') return
-
-    var locations = []
-    for (var i = 0;i < n;i++) {
-      locations[i] = {
-        pos: config.location,
-        orient: config.orientation,
-      }
-    }
 
     var size = unit_size.updateFootprint(config.what)
 
@@ -72,12 +66,10 @@ define([
     //console.log(gx, gy, gz)
     //console.log(config.location)
 
-    spiral(n, function(i, x, y) {
-      //console.log(i, x, y)
-      var loc = locations[i]
-      //console.log(loc)
-      x = x*size.footprint[0]
-      y = y*size.footprint[1]
+    var locations = spiral(n).map(function(g) {
+      //console.log(g)
+      var x = g[0]*size.footprint[0]
+      var y = g[1]*size.footprint[1]
       //console.log(x, y)
       var l = VMath.length_v2([x, y])
       if (l == 0) {
@@ -94,12 +86,19 @@ define([
       var x3 = r*c*vx
       var y3 = r*c*vy
       var z3 = r*s
-      loc.pos = [
-        loc.pos[0] + gx[0]*x3 + gy[0]*y3 + gz[0]*z3,
-        loc.pos[1] + gx[1]*x3 + gy[1]*y3 + gz[1]*z3,
-        loc.pos[2] + gx[2]*x3 + gy[2]*y3 + gz[2]*z3,
-      ]
+
+      var pos = config.location
+      //console.log(pos)
+      var loc = {
+        pos: [
+          pos[0] + gx[0]*x3 + gy[0]*y3 + gz[0]*z3,
+          pos[1] + gx[1]*x3 + gy[1]*y3 + gz[1]*z3,
+          pos[2] + gx[2]*x3 + gy[2]*y3 + gz[2]*z3,
+        ],
+        orient: config.orientation,
+      }
       //console.log([x, y], [x3, y3, z3], loc.pos)
+      return loc
     })
     //console.log(locations)
 
