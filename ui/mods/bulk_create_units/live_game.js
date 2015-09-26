@@ -10,12 +10,11 @@ define([
   mouse.setTracking(model.cheatAllowCreateUnit())
   model.cheatAllowCreateUnit.subscribe(mouse.setTracking)
 
-  armyIndex = ko.computed(function() {
+  var armyIndex = ko.computed(function() {
     return model.playerControlFlags().indexOf(true)
   })
 
-  // keep puppetmaster's special effects if it's present
-  model.pasteUnits = model.pasteUnits || function(n) {
+  var pasteUnits = function(n) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
     if (armyIndex() == -1) return
@@ -30,6 +29,7 @@ define([
       pasteUnits3D(n, drop, result)
     })
   }
+  pasteUnits.raycast = true
 
   var pasteUnits3D = function(n, config, center) {
     if (!model.cheatAllowCreateUnit()) return
@@ -93,11 +93,6 @@ define([
     }
   }
 
-  model.bulkPasteCount = ko.observable(10)
-  model.bulkPaste = function() {
-    model.pasteUnits(model.bulkPasteCount())
-  }
-
   var lastHover = ko.observable('')
   var selectedUnit = ko.observable(lastHover())
 
@@ -126,7 +121,9 @@ define([
   }
 
   return {
-    bulkPasteCount: model.bulkPasteCount,
+    pasteUnits: pasteUnits,
+    pasteUnits3D: pasteUnits3D,
+    distributeUnitLocations: distributeUnitLocations,
     selectedUnit: selectedUnit,
     sandboxExpanded: sandboxExpanded,
     lastHover: lastHover,

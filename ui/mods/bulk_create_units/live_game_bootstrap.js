@@ -16,7 +16,20 @@ _.defaults(handlers, {
 api.Panel.message('', 'inputmap.reload');
 
 require(['bulk_create_units/live_game'], function(bcu) {
-  handlers.bulk_paste_count = bcu.bulkPasteCount
+
+  // This is extremely delecate.
+  // We want to overwrite Sandbox Unit Menu basic version,
+  //   but not Puppetmaster's drop pod effect
+  if (!model.pasteUnits || !model.pasteUnits.raycast) {
+    model.pasteUnits = bcu.pasteUnits
+  }
+  model.pasteUnits3D = bcu.pasteUnits3D
+  model.bulkPasteCount = ko.observable(10)
+  model.bulkPaste = function() {
+    model.pasteUnits(model.bulkPasteCount())
+  }
+
+  handlers.bulk_paste_count = model.bulkPasteCount
   handlers.bulkCreateUnitSelected = bcu.selectedUnit
   handlers.bulkCreateUnitSandboxExpanded = bcu.sandboxExpanded
 
