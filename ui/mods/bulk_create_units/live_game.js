@@ -31,13 +31,49 @@ define([
     })
   }
 
-  var isOk = function(loc) {
-    if (!loc.ok) {
-      console.log(loc.desc)
-      return false
-    } else {
-      return true
+  var pasteUnits3D = function(n, config, center) {
+    if (!model.cheatAllowCreateUnit()) return
+    if (n < 1) return
+    if (!config.what || config.what == '') return
+
+    distributeUnitLocations(n, config, center).then(createUnits3D)
+  }
+
+  var createUnits3D = function(drops) {
+    if (!model.cheatAllowCreateUnit()) return
+
+    drops.forEach(function(drop) {
+      model.send_message('create_unit', drop)
+    })
+  }
+
+  var distributeUnitLocations = function(n, config, center) {
+    var size = unit_size.updateFootprint(config.what)
+    var locations = wrap_grid(n, size.footprint, center)
+
+    var validate = function(fixups) {
+      //console.log(fixups)
+
+      return validLocations(size, fixups)
     }
+
+    var configure = function(fixups) {
+      return fixups.map(function(loc) {
+        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+        return {
+          army: config.army,
+          what: config.what,
+          planet: center.planet,
+          location: loc.pos || center.pos,
+          orientation: loc.orient || center.orient,
+        }
+      })
+    }
+
+    return mouse.hdeck.view
+      .fixupBuildLocations(config.what, center.planet, locations)
+      .then(validate)
+      .then(configure)
   }
 
   var validLocations = function(size, locations) {
@@ -48,25 +84,13 @@ define([
     }
   }
 
-  var pasteUnits3D = function(n, config, center) {
-    if (!model.cheatAllowCreateUnit()) return
-    if (n < 1) return
-    if (!config.what || config.what == '') return
-
-    var size = unit_size.updateFootprint(config.what)
-    var locations = wrap_grid(n, size.footprint, center)
-    config.planet = center.planet
-
-    mouse.hdeck.view.fixupBuildLocations(config.what, center.planet, locations).then(function(fixups) {
-      //console.log(fixups)
-
-      validLocations(size, fixups).forEach(function(loc) {
-        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
-        config.location = loc.pos || center.pos
-        config.orientation = loc.orient || center.orient
-        model.send_message('create_unit', config)
-      })
-    })
+  var isOk = function(loc) {
+    if (!loc.ok) {
+      console.log(loc.desc)
+      return false
+    } else {
+      return true
+    }
   }
 
   model.bulkPasteCount = ko.observable(10)
