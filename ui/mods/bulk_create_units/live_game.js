@@ -98,47 +98,37 @@ define([
     model.pasteUnits(model.bulkPasteCount())
   }
 
-  handlers.bulk_paste_count = model.bulkPasteCount
-
-  var lastHover = ''
-  var selectedUnit = ko.observable(lastHover)
+  var lastHover = ko.observable('')
+  var selectedUnit = ko.observable(lastHover())
 
   selectedUnit.subscribe(function(spec) {
     api.Panel.message('sandbox', 'bulkCreateUnitSpec', spec)
     unit_size.load()
   })
 
-  handlers.bulkCreateUnitSelected = function(spec) {
-    selectedUnit(spec)
-  }
-
-  var liveGameHover = handlers.hover
-  handlers.hover = function(payload) {
-    liveGameHover(payload)
-
-    if (payload) {
-      lastHover = payload.spec_id || ''
-    }
-  }
-
   var engineCall = engine.call
   engine.call = function(method) {
     var promise = engineCall.apply(this, arguments);
 
     if (method == 'unit.debug.copy') {
-      selectedUnit(lastHover)
+      selectedUnit(lastHover())
     } else if (method == 'unit.debug.setSpecId') {
-      var spec = arguments[1]
-      var unit = model.unitSpecs[spec]
-      selectedUnit(spec)
+      selectedUnit(arguments[1])
     }
 
     return promise
   }
 
-  handlers.bulkCreateUnitSandboxExpanded = function(open) {
+  var sandboxExpanded = function(open) {
     if (open) {
       unit_size.load()
     }
+  }
+
+  return {
+    bulkPasteCount: model.bulkPasteCount,
+    selectedUnit: selectedUnit,
+    sandboxExpanded: sandboxExpanded,
+    lastHover: lastHover,
   }
 })

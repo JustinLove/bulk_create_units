@@ -15,4 +15,17 @@ _.defaults(handlers, {
 
 api.Panel.message('', 'inputmap.reload');
 
-require(['bulk_create_units/live_game'])
+require(['bulk_create_units/live_game'], function(bcu) {
+  handlers.bulk_paste_count = bcu.bulkPasteCount
+  handlers.bulkCreateUnitSelected = bcu.selectedUnit
+  handlers.bulkCreateUnitSandboxExpanded = bcu.sandboxExpanded
+
+  var liveGameHover = handlers.hover
+  handlers.hover = function(payload) {
+    liveGameHover(payload)
+
+    if (payload) {
+      bcu.lastHover(payload.spec_id || '')
+    }
+  }
+})
