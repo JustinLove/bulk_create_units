@@ -1,3 +1,12 @@
+## 2.0.0
+
+- Units are distributed in a wrapped grid approximately based on regular placement spacing.
+- Units (e.g. mex) that require features will only be placed on those features
+- Interface with Puppetmaster changed
+- Raycast/fixup/`create_unit` instead of `unit.debug.paste`
+- Using unitInfoParser by `Cola_Colin` to load unit size placement
+- Requirejs for better error messages and modularity
+
 ## 1.3.0
 
 - Highlight currently selected unit
