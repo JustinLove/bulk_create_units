@@ -19,18 +19,15 @@ define([
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
     if (armyIndex() == -1) return
-    var army_id = model.players()[armyIndex()].id
+
+    var drop = {
+      army: model.players()[armyIndex()].id,
+      what: selectedUnit(),
+    }
 
     mouse.raycast().then(function(result) {
       //console.log(result)
-      var drop = {
-        army: army_id,
-        what: selectedUnit(),
-        planet: result.planet,
-        location: result.pos,
-        orientation: result.orient,
-      }
-      pasteUnits3D(n, drop)
+      pasteUnits3D(n, drop, result)
     })
   }
 
@@ -52,21 +49,21 @@ define([
 
   var epsilon = 1e-300
 
-  var pasteUnits3D = function(n, config) {
+  var pasteUnits3D = function(n, config, center) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
     if (!config.what || config.what == '') return
 
     var size = unit_size.updateFootprint(config.what)
 
-    var r = VMath.length_v3(config.location)
+    var r = VMath.length_v3(center.pos)
 
-    var gx = VMath.apply_q([1, 0, 0, 0], config.orientation)
-    var gy = VMath.apply_q([0, 1, 0, 0], config.orientation)
-    var gz = VMath.apply_q([0, 0, 1, 0], config.orientation)
+    var gx = VMath.apply_q([1, 0, 0, 0], center.orient)
+    var gy = VMath.apply_q([0, 1, 0, 0], center.orient)
+    var gz = VMath.apply_q([0, 0, 1, 0], center.orient)
 
     //console.log(gx, gy, gz)
-    //console.log(config.location)
+    //console.log(center.pos)
 
     var locations = spiral(n).map(function(g) {
       //console.log([].concat(g), size.footprint)
@@ -88,8 +85,8 @@ define([
       var y3 = r*c*unit[1]
       var z3 = r*s
 
-      //console.log(config)
-      var pos = config.location
+      //console.log(center)
+      var pos = center.pos
       //console.log(v, [x3, y3, z3], pos)
       var loc = {
         pos: [
@@ -97,15 +94,17 @@ define([
           pos[1] + gx[1]*x3 + gy[1]*y3 + gz[1]*z3,
           pos[2] + gx[2]*x3 + gy[2]*y3 + gz[2]*z3,
         ],
-        orient: config.orientation,
+        orient: center.orient,
       }
       //console.log(loc.pos)
       return loc
     })
     //console.log(locations)
 
-    mouse.hdeck.view.fixupBuildLocations(config.what, config.planet, locations).then(function(fixup) {
+    mouse.hdeck.view.fixupBuildLocations(config.what, center.planet, locations).then(function(fixup) {
       //console.log(fixup)
+
+      config.planet = center.planet
 
       fixup.forEach(function(loc) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
@@ -114,8 +113,8 @@ define([
           console.log(loc.desc)
           return
         }
-        config.location = loc.pos || config.location
-        config.orientation = loc.orient || config.orientation
+        config.location = loc.pos || center.pos
+        config.orientation = loc.orient || center.orient
         model.send_message('create_unit', config)
       })
     })
