@@ -31,27 +31,37 @@ define([
     })
   }
 
+  var isOk = function(loc) {
+    if (!loc.ok) {
+      console.log(loc.desc)
+      return false
+    } else {
+      return true
+    }
+  }
+
+  var validLocations = function(size, locations) {
+    if (size && size.feature_requirements) {
+      return locations.filter(isOk)
+    } else {
+      return locations
+    }
+  }
+
   var pasteUnits3D = function(n, config, center) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
     if (!config.what || config.what == '') return
 
     var size = unit_size.updateFootprint(config.what)
-
     var locations = wrap_grid(n, size.footprint, center)
+    config.planet = center.planet
 
-    mouse.hdeck.view.fixupBuildLocations(config.what, center.planet, locations).then(function(fixup) {
-      //console.log(fixup)
+    mouse.hdeck.view.fixupBuildLocations(config.what, center.planet, locations).then(function(fixups) {
+      //console.log(fixups)
 
-      config.planet = center.planet
-
-      fixup.forEach(function(loc) {
+      validLocations(size, fixups).forEach(function(loc) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
-
-        if (size && size.feature_requirements && !loc.ok) {
-          console.log(loc.desc)
-          return
-        }
         config.location = loc.pos || center.pos
         config.orientation = loc.orient || center.orient
         model.send_message('create_unit', config)
