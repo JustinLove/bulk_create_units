@@ -3,7 +3,7 @@
   "build": "88288",
   "category": ["sandbox", "ui"],
   "context": "client",
-  "date": "2015/09/26",
+  "date": "2015/09/27",
   "description": "Adds hotkey for pasting 10 or N units with the create-unit cheat.",
   "display_name": "Bulk Create Units",
   "forum": "https://forums.uberent.com/threads/rel-bulk-create-units.62492/",
@@ -25,5 +25,5 @@
     ]
   },
   "signature": "not yet implemented",
-  "version": "2.0.0"
+  "version": "2.0.1"
 }

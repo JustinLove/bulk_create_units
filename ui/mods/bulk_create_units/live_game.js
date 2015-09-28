@@ -58,14 +58,17 @@ define([
     }
 
     var configure = function(fixups) {
-      return fixups.map(function(loc) {
+      return fixups.map(function(loc, i) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+        if (loc.pos[0] == 0 && loc.pos[1] == 0 && loc.pos[2] == 0) {
+          loc.pos = locations[i].pos
+        }
         return {
           army: config.army,
           what: config.what,
           planet: center.planet,
-          location: loc.pos || center.pos,
-          orientation: loc.orient || center.orient,
+          location: loc.pos || locations[i].pos,
+          orientation: loc.orient || locations[i].orient,
         }
       })
     }

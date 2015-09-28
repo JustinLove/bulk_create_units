@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Fix for degenerate fixup location for naval units on waterless planet types
+
 ## 2.0.0
 
 - Units are distributed in a wrapped grid approximately based on regular placement spacing.
