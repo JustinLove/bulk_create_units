@@ -44,9 +44,10 @@ define([
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
         if (loc.pos[0] == 0 && loc.pos[1] == 0 && loc.pos[2] == 0) {
           loc.pos = locations[i].pos
+          loc.orient = locations[i].orient
         }
         loc.planet = center.planet
-        delete loc.orient // often puts things sideways
+        loc.orient_rel = false // fixup appears to give absolute orients
         var color
         if (!loc.ok) {
           color = [0.8, 0, 0, 0]
