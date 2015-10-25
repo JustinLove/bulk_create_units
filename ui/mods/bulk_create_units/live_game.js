@@ -110,6 +110,9 @@ define([
   var selectedUnit = ko.observable(lastHover())
 
   selectedUnit.subscribe(function(spec) {
+    if (spec == '') {
+      preview.clearPreviews(mouse.hdeck.view)
+    }
     api.Panel.message('sandbox', 'bulkCreateUnitSpec', spec)
     unit_size.load()
   })
