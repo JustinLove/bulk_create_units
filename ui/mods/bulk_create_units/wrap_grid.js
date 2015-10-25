@@ -51,6 +51,7 @@ define(['bulk_create_units/qmath'], function(VMath) {
       var pos = center.pos
       //console.log(v, [x3, y3, z3], pos)
       var loc = {
+        planet: center.planet,
         pos: [
           pos[0] + gx[0]*x3 + gy[0]*y3 + gz[0]*z3,
           pos[1] + gx[1]*x3 + gy[1]*y3 + gz[1]*z3,

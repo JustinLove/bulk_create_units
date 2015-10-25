@@ -28,6 +28,11 @@ require(['bulk_create_units/live_game'], function(bcu) {
   model.bulkPaste = function() {
     model.pasteUnits(model.bulkPasteCount())
   }
+  var ghost = function() {
+    bcu.previewUnits(model.bulkPasteCount())
+    setTimeout(ghost, 1000)
+  }
+  ghost()
 
   handlers.bulk_paste_count = model.bulkPasteCount
   handlers.bulkCreateUnitSelected = bcu.selectedUnit

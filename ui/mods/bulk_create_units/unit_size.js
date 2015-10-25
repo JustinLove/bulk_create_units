@@ -19,6 +19,8 @@ define([], function() {
           placement_size: spec.placement_size,
           physics: spec.physics,
           feature_requirements: spec.feature_requirements,
+          model_filename: spec.model && (spec.model.filename || (spec.model[0] && spec.model[0].filename)),
+          TEMP_texelinfo: spec.TEMP_texelinfo,
         }
       }, function(a, b) {
         var result = {
@@ -29,6 +31,8 @@ define([], function() {
           placement_size: a.placement_size || b.placement_size,
           physics: _.extend({}, a.physics, b.physics),
           feature_requirements: a.feature_requirements || b.feature_requirements,
+          model_filename: a.model_filename || b.model_filename,
+          TEMP_texelinfo: a.TEMP_texelinfo || b.TEMP_texelinfo || 10,
         }
         //console.log('combine', a.display_name, b.display_name, a, b, result)
         return result

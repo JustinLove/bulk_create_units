@@ -2,10 +2,12 @@ define([
   'bulk_create_units/mouse_tracking',
   'bulk_create_units/unit_size',
   'bulk_create_units/wrap_grid',
+  'bulk_create_units/preview',
 ], function(
   mouse,
   unit_size,
-  wrap_grid
+  wrap_grid,
+  preview
 ) {
   mouse.setTracking(model.cheatAllowCreateUnit())
   model.cheatAllowCreateUnit.subscribe(mouse.setTracking)
@@ -13,6 +15,14 @@ define([
   var armyIndex = ko.computed(function() {
     return model.playerControlFlags().indexOf(true)
   })
+
+  var previewUnits = function(n) {
+    if (n < 1) return
+
+    mouse.raycast().then(function(result) {
+      preview.previewUnits3D(mouse.hdeck.view, n, selectedUnit(), result)
+    })
+  }
 
   var pasteUnits = function(n) {
     if (!model.cheatAllowCreateUnit()) return
@@ -124,6 +134,7 @@ define([
   }
 
   return {
+    previewUnits: previewUnits,
     pasteUnits: pasteUnits,
     pasteUnits3D: pasteUnits3D,
     distributeUnitLocations: distributeUnitLocations,
