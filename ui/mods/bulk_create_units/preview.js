@@ -5,15 +5,23 @@ define([
   unit_size,
   wrap_grid
 ) {
+  var previews = []
+
   var previewUnits3D = function(view, n, spec_id, center) {
     if (n < 1) return
     if (!spec_id || spec_id == '') return
 
     var puppetUnits3D = function(puppets) {
-      clearPreviews(view)
-      puppets.forEach(function(puppet) {
+      //clearPreviews(view)
+      puppets.forEach(function(puppet, i) {
         //console.log(puppet)
-        view.puppet(puppet, true)
+        if (previews[i]) {
+          puppet.id = previews[i].id
+        }
+        view.puppet(puppet, true).then(function(r) { previews[i] = r })
+      })
+      previews.splice(puppets.length).forEach(function(puppet) {
+        removePuppet(view, puppet)
       })
     }
 

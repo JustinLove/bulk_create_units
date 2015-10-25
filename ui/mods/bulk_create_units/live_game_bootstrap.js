@@ -30,7 +30,7 @@ require(['bulk_create_units/live_game'], function(bcu) {
   }
   var ghost = function() {
     bcu.previewUnits(model.bulkPasteCount())
-    setTimeout(ghost, 1000)
+    setTimeout(ghost, 100)
   }
   ghost()
 
