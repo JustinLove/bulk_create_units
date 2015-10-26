@@ -59,7 +59,7 @@ define([
 
   var distributeUnitLocations = function(n, config, center) {
     var size = unit_size.updateFootprint(config.what)
-    var locations = wrap_grid(n, size.footprint, center)
+    var locations = wrap_grid(size.footprint, center).take(n)
 
     var validate = function(fixups) {
       //console.log(fixups)

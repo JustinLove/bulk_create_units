@@ -1,38 +1,41 @@
 define(['bulk_create_units/qmath'], function(VMath) {
   // http://stackoverflow.com/a/31864777/30203
-  var spiral = function(n) {
+  var spiralGenerator = function() {
     var x = 0;
     var y = 0;
-    var grid = new Array(n)
-    for (var i = 0;i < n;i++) {
-      grid[i] = [x, y]
-      if(Math.abs(x) <= Math.abs(y) && (x != y || x >= 0)) {
-        x += ((y >= 0) ? 1 : -1);
-      } else {
-        y += ((x >= 0) ? -1 : 1);
+    return {
+      next: function() {
+        var v = {value: [x, y], done: false}
+        if(Math.abs(x) <= Math.abs(y) && (x != y || x >= 0)) {
+          x += ((y >= 0) ? 1 : -1);
+        } else {
+          y += ((x >= 0) ? -1 : 1);
+        }
+        return v
       }
     }
-    return grid
   }
 
   var epsilon = 1e-300
 
-  var wrapGrid = function(n, footprint, center) {
+  var wrapGridGenerator = function(footprint, center) {
+
+    var spiral = spiralGenerator()
+
+    var stretch = function(g) {
+      //console.log([].concat(g), footprint)
+      VMath._mul_v2(g, footprint)
+      //console.log(g)
+      return g
+    }
+
     var r = VMath.length_v3(center.pos)
 
     var gx = VMath.apply_q([1, 0, 0, 0], center.orient)
     var gy = VMath.apply_q([0, 1, 0, 0], center.orient)
     var gz = VMath.apply_q([0, 0, 1, 0], center.orient)
 
-    //console.log(gx, gy, gz)
-    //console.log(center.pos)
-
-    return spiral(n).map(function(g) {
-      //console.log([].concat(g), footprint)
-      VMath._mul_v2(g, footprint)
-      //console.log(g)
-      return g
-    }).map(function(v) {
+    var wrap = function(v) {
       //console.log(v)
       var l = VMath.length_v2(v)
       //console.log(l)
@@ -61,8 +64,24 @@ define(['bulk_create_units/qmath'], function(VMath) {
       }
       //console.log(loc.pos)
       return loc
-    })
+    }
+
+    //console.log(gx, gy, gz)
+    //console.log(center.pos)
+
+    return {
+      next: function() {
+        return {value: wrap(stretch(spiral.next().value)), done: false}
+      },
+      take: function(n) {
+        var locs = new Array(n)
+        for (var i = 0;i < n;i++) {
+          locs[i] = this.next().value
+        }
+        return locs
+      }
+    }
   }
 
-  return wrapGrid
+  return wrapGridGenerator
 })
