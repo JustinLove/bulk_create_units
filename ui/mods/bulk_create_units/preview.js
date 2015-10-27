@@ -11,6 +11,35 @@ define([
     if (n < 1) return
     if (!spec_id || spec_id == '') return
 
+    var configure = function(fixups) {
+      var size = unit_size.updateFootprint(spec_id)
+      return fixups.map(function(loc, i) {
+        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+        var color
+        if (!loc.ok) {
+          color = [0.8, 0, 0, 0]
+        } else if (loc.desc) {
+          color = [0.8, 0.2, 0.2, 0]
+        } else {
+          color = [0.6, 0.6, 0.6, 0]
+        }
+        return {
+          model: {filename: size.model_filename},
+          location: loc,
+          material: {
+            shader: "pa_unit_ghost",
+            constants: {
+              GhostColor: color,
+              BuildInfo: [0,size.TEMP_texelinfo,0,0],
+            },
+            textures: {
+              Diffuse: "/pa/effects/diffuse_texture.papa"
+            }
+          },
+        }
+      })
+    }
+
     var puppetUnits3D = function(puppets) {
       //clearPreviews(view)
       puppets.forEach(function(puppet, i) {
@@ -25,7 +54,9 @@ define([
       })
     }
 
-    distributeUnitLocations(view, n, spec_id, center).then(puppetUnits3D)
+    distributeUnitLocations(view, n, spec_id, center)
+      .then(configure)
+      .then(puppetUnits3D)
   }
 
   var distributeUnitLocations = function(view, n, spec_id, center) {
@@ -48,45 +79,23 @@ define([
       return fixups.slice(0, n)
     }
 
-    var configure = function(fixups) {
-      return fixups.map(function(loc, i) {
+    var tweak = function(fixups) {
+      fixups.forEach(function(loc, i) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
-        //console.log(locations[i].orient)
         if (loc.pos[0] == 0 && loc.pos[1] == 0 && loc.pos[2] == 0) {
           loc.pos = locations[i].pos
         }
         loc.planet = center.planet
         loc.orient_rel = false // fixup appears to give absolute orients
         loc.orient = loc.orient || locations[i].orient
-        var color
-        if (!loc.ok) {
-          color = [0.8, 0, 0, 0]
-        } else if (loc.desc) {
-          color = [0.8, 0.2, 0.2, 0]
-        } else {
-          color = [0.6, 0.6, 0.6, 0]
-        }
-        return {
-          model: {filename: size.model_filename},
-          location: loc || locations[i],
-          material: {
-            shader: "pa_unit_ghost",
-            constants: {
-              GhostColor: color,
-              BuildInfo: [0,size.TEMP_texelinfo,0,0],
-            },
-            textures: {
-              Diffuse: "/pa/effects/diffuse_texture.papa"
-            }
-          },
-        }
       })
+      return fixups
     }
 
     return view
       .fixupBuildLocations(spec_id, center.planet, locations)
       .then(validate)
-      .then(configure)
+      .then(tweak)
   }
 
   var clearPreviews = function(view) {
