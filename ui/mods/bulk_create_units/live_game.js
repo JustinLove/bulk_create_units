@@ -46,7 +46,22 @@ define([
     if (n < 1) return
     if (!config.what || config.what == '') return
 
-    distributeUnitLocations(n, config, center).then(createUnits3D)
+    var configure = function(fixups) {
+      return fixups.map(function(loc, i) {
+        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
+        return {
+          army: config.army,
+          what: config.what,
+          planet: loc.planet,
+          location: loc.pos,
+          orientation: loc.orient,
+        }
+      })
+    }
+
+    distributeUnitLocations(n, config, center)
+      .then(configure)
+      .then(createUnits3D)
   }
 
   var createUnits3D = function(drops) {
@@ -67,26 +82,23 @@ define([
       return validLocations(size, fixups)
     }
 
-    var configure = function(fixups) {
-      return fixups.map(function(loc, i) {
+    var tweak = function(fixups) {
+      fixups.forEach(function(loc, i) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
         if (loc.pos[0] == 0 && loc.pos[1] == 0 && loc.pos[2] == 0) {
           loc.pos = locations[i].pos
         }
-        return {
-          army: config.army,
-          what: config.what,
-          planet: center.planet,
-          location: loc.pos || locations[i].pos,
-          orientation: loc.orient || locations[i].orient,
-        }
+        loc.planet = center.planet
+        loc.orient_rel = false // fixup appears to give absolute orients
+        loc.orient = loc.orient || locations[i].orient
       })
+      return fixups
     }
 
     return mouse.hdeck.view
       .fixupBuildLocations(config.what, center.planet, locations)
       .then(validate)
-      .then(configure)
+      .then(tweak)
   }
 
   var validLocations = function(size, locations) {
