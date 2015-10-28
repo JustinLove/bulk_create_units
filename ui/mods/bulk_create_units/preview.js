@@ -1,9 +1,11 @@
 define([
   'bulk_create_units/unit_size',
   'bulk_create_units/wrap_grid',
+  'bulk_create_units/area',
 ], function(
   unit_size,
-  wrap_grid
+  wrap_grid,
+  area
 ) {
   var previews = []
 
