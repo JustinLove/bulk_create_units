@@ -1,27 +1,9 @@
 define([
+  'bulk_create_units/spiral_grid',
   'bulk_create_units/plane_wrap',
   'bulk_create_units/qmath'
-], function(projection, VMath) {
-  // http://stackoverflow.com/a/31864777/30203
-  var spiralGenerator = function() {
-    var x = 0;
-    var y = 0;
-    return {
-      next: function() {
-        var v = {value: [x, y], done: false}
-        if(Math.abs(x) <= Math.abs(y) && (x != y || x >= 0)) {
-          x += ((y >= 0) ? 1 : -1);
-        } else {
-          y += ((x >= 0) ? -1 : 1);
-        }
-        return v
-      }
-    }
-  }
-
-  var epsilon = 1e-300
-
-  var wrapGridGenerator = function(footprint, center) {
+], function(spiralGenerator, projection, VMath) {
+  return function(footprint, center) {
 
     var spiral = spiralGenerator()
 
@@ -47,6 +29,4 @@ define([
       }
     }
   }
-
-  return wrapGridGenerator
 })
