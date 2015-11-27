@@ -99,6 +99,5 @@ define([
 
   return {
     paradeUnits3D: paradeUnits3D,
-    distributeUnitLocations: distributeUnitLocations,
   }
 })
