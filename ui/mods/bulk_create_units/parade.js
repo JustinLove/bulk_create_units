@@ -1,7 +1,9 @@
 define([
+  'bulk_create_units/parade_grid',
   'bulk_create_units/plane_wrap',
   'bulk_create_units/distribute_grid',
 ], function(
+  parade_grid,
   projection,
   distribute_grid
 ) {
@@ -35,33 +37,16 @@ define([
   }
 
   var distributeUnitLocations = function(view, center) {
-    var wrap = projection(center)
     var locations
 
-    var getLayout = function() {
-      return api.panels.sandbox.query('bulkCreateUnitLayout')
-    }
-
-    var distribute = function(layout) {
-      locations = layout.cells
-      var c = 0
-      var x = - layout.columns / 2
-      var y = (locations.length / layout.columns) / 2
+    var stretch = function(locations) {
+      var wrap = projection(center)
       locations.forEach(function(item) {
-        var loc = wrap([x*50, y*50])
+        var loc = wrap([item.pos[0]*50, item.pos[1]*50])
         item.pos = loc.pos
-        //console.log([x, y], loc.pos)
         item.orient = loc.orient
         item.planet = loc.planet
-        x += 1
-        c += 1
-        if (c >= layout.columns) {
-          c = 0
-          x = - layout.columns / 2
-          y -= 1
-        }
       })
-      locations = locations.filter(function(item) {return item.spec != ''})
       return locations
     }
 
@@ -73,8 +58,8 @@ define([
         .then(function(fixups) {def.resolve(fixups)})
     }
 
-    getLayout()
-      .then(distribute)
+    parade_grid()
+      .then(stretch)
       .then(fixup)
 
     return def.promise()
