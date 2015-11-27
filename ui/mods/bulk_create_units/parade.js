@@ -1,7 +1,9 @@
 define([
   'bulk_create_units/plane_wrap',
+  'bulk_create_units/distribute_grid',
 ], function(
-  projection
+  projection,
+  distribute_grid
 ) {
   var paradeUnits3D = function(view, armyId, center) {
     if (!model.cheatAllowCreateUnit()) return
@@ -63,36 +65,17 @@ define([
       return locations
     }
 
-    var fixup = function(locations) {
-      return view.fixupBuildLocations(
-        '/pa/units/commanders/imperial_invictus/imperial_invictus.json',
-        center.planet, locations)
-    }
-
-    var tweak = function(fixups) {
-      fixups.forEach(function(loc, i) {
-        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
-        if (loc.pos[0] == 0 && loc.pos[1] == 0 && loc.pos[2] == 0) {
-          loc.pos = locations[i].pos
-        }
-        loc.planet = center.planet
-        loc.orient_rel = false // fixup appears to give absolute orients
-        loc.orient = loc.orient || locations[i].orient
-        loc.spec = locations[i].spec
-      })
-      return fixups
-    }
-
     var def = $.Deferred()
+    var fixup = function(locations) {
+      return distribute_grid.fixupUniform(view,
+          '/pa/units/commanders/imperial_invictus/imperial_invictus.json',
+          center.planet, locations)
+        .then(function(fixups) {def.resolve(fixups)})
+    }
 
     getLayout()
       .then(distribute)
       .then(fixup)
-      .then(function(prom) {
-        prom
-          .then(tweak)
-          .then(function(fixups) {def.resolve(fixups)})
-      })
 
     return def.promise()
   }

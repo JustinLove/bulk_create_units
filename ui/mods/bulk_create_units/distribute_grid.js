@@ -10,9 +10,6 @@ define([
     var locations = wrap_grid(size.footprint, center).take(n*2)
 
     var validate = function(fixups) {
-      if (!size.model_filename) {
-        return[]
-      }
       var valid = 0
       for (i = 0;i < fixups.length;i++) {
         if (fixups[i].ok) {
@@ -25,26 +22,31 @@ define([
       return fixups.slice(0, n)
     }
 
+    return fixupUniform(view, spec_id, center.planet, locations)
+      .then(validate)
+  }
+
+  var fixupUniform = function(view, spec_id, planet, locations) {
     var tweak = function(fixups) {
-      fixups.forEach(function(loc, i) {
-        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
-        if (loc.pos[0] == 0 && loc.pos[1] == 0 && loc.pos[2] == 0) {
-          loc.pos = locations[i].pos
+      locations.forEach(function(loc, i) {
+        var fix = fixups[i]
+        loc.ok = fix.ok
+        loc.desc = fix.desc
+        loc.planet = planet
+        if (fix.pos[0] != 0 || fix.pos[1] != 0 || fix.pos[2] != 0) {
+          loc.pos = fix.pos
         }
-        loc.planet = center.planet
+        if (fix.orient) loc.orient = fix.orient
         loc.orient_rel = false // fixup appears to give absolute orients
-        loc.orient = loc.orient || locations[i].orient
       })
-      return fixups
+      return locations
     }
 
-    return view
-      .fixupBuildLocations(spec_id, center.planet, locations)
-      .then(validate)
-      .then(tweak)
+    return view.fixupBuildLocations(spec_id, planet, locations).then(tweak)
   }
 
   return {
     distributeUnitLocations: distributeUnitLocations,
+    fixupUniform: fixupUniform,
   }
 })
