@@ -3,11 +3,13 @@ define([
   'bulk_create_units/unit_size',
   'bulk_create_units/wrap_grid',
   'bulk_create_units/preview',
+  'bulk_create_units/parade',
 ], function(
   mouse,
   unit_size,
   wrap_grid,
-  preview
+  preview,
+  parade
 ) {
   mouse.setTracking(model.cheatAllowCreateUnit())
   model.cheatAllowCreateUnit.subscribe(mouse.setTracking)
@@ -19,8 +21,21 @@ define([
   var previewUnits = function(n) {
     if (n < 1) return
 
-    mouse.raycast().then(function(result) {
-      preview.previewUnits3D(mouse.hdeck.view, n, selectedUnit(), result)
+    mouse.raycast().then(function(location) {
+      preview.previewUnits3D(mouse.hdeck.view, n, selectedUnit(), location)
+    })
+  }
+
+  var paradeUnits = function() {
+    console.log('parade', model.cheatAllowCreateUnit(), armyIndex())
+    if (!model.cheatAllowCreateUnit()) return
+    if (armyIndex() == -1) return
+
+    var army = model.players()[armyIndex()].id
+
+    mouse.raycast().then(function(location) {
+      console.log('parade loc', location)
+      parade.paradeUnits3D(mouse.hdeck.view, army, location)
     })
   }
 
@@ -149,6 +164,7 @@ define([
   }
 
   return {
+    paradeUnits: paradeUnits,
     previewUnits: previewUnits,
     pasteUnits: pasteUnits,
     pasteUnits3D: pasteUnits3D,

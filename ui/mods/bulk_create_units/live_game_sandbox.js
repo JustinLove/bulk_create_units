@@ -50,6 +50,17 @@
     $('.div_sandbox_unit_item[data-spec="' + spec + '"]').addClass('selected')
   }
 
+  handlers.bulkCreateUnitLayout = function() {
+    if (model.sandboxGrid) {
+      return model.sandboxGrid()
+    } else {
+      var scale = api.settings.getSynchronous('ui', 'ui_scale') || 1.0;
+      var columns = (scale < 1.0) ? 8 : 9
+      // note: units is not built unless the box is open
+      return {columns: columns, cells: model.sandbox_units()}
+    }
+  }
+
   var $item = $('.div_sandbox_unit_item')
   $item.attr('data-bind', $item.attr('data-bind') + ', attr: {\'data-spec\': spec}')
 })()
