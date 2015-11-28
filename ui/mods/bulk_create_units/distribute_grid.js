@@ -32,6 +32,7 @@ define([
         var fix = fixups[i]
         loc.ok = fix.ok
         loc.desc = fix.desc
+        if (!loc.spec_id) loc.spec_id = spec_id
         loc.planet = planet
         if (fix.pos[0] != 0 || fix.pos[1] != 0 || fix.pos[2] != 0) {
           loc.pos = fix.pos

@@ -14,6 +14,7 @@ define([
       var x = - layout.columns / 2
       var y = (locations.length / layout.columns) / 2
       locations.forEach(function(item) {
+        item.spec_id = item.spec
         item.pos = [x, y]
         //console.log(loc.pos)
         x += 1
@@ -24,7 +25,7 @@ define([
           y -= 1
         }
       })
-      locations = locations.filter(function(item) {return item.spec != ''})
+      locations = locations.filter(function(item) {return item.spec_id != ''})
       return locations
     }
 

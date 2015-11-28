@@ -5,17 +5,17 @@ define([
   unit_size,
   distribute_grid
 ) {
-  var pasteUnits3D = function(view, n, config, center) {
+  var pasteUnits3D = function(view, n, spec_id, army_id, center) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
-    if (!config.what || config.what == '') return
+    if (!spec_id || spec_id == '') return
 
     var configure = function(fixups) {
       return fixups.map(function(loc, i) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
         return {
-          army: config.army,
-          what: config.what,
+          army: army_id,
+          what: loc.spec_id,
           planet: loc.planet,
           location: loc.pos,
           orientation: loc.orient,
@@ -23,7 +23,7 @@ define([
       })
     }
 
-    distribute_grid.distributeUnitLocations(view, n, config.what, center)
+    distribute_grid.distributeUnitLocations(view, n, spec_id, center)
       .then(configure)
       .then(createUnits3D)
   }

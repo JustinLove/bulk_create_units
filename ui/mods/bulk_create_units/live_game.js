@@ -58,7 +58,7 @@ define([
   pasteUnits.raycast = true
 
   var pasteUnits3D = function(n, config, center) {
-    return bulk_paste.pasteUnits3D(mouse.hdeck.view, n, config, center)
+    return bulk_paste.pasteUnits3D(mouse.hdeck.view, n, config.what, config.army, center)
   }
 
   var lastHover = ko.observable('')

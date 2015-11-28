@@ -15,7 +15,7 @@ define([
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
         return {
           army: armyId,
-          what: loc.spec,
+          what: loc.spec_id,
           planet: loc.planet,
           location: loc.pos,
           orientation: loc.orient,
