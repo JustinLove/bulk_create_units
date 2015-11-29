@@ -10,13 +10,13 @@ define([
   var previewUnits3D = function(view, n, spec_id, center) {
     if (n < 1) return
     if (!spec_id || spec_id == '') return
-    var size = unit_size.updateFootprint(spec_id)
+    var size = unit_size.data()[spec_id]
     if (!size.model_filename) return
 
     var configure = function(fixups) {
-      var size = unit_size.updateFootprint(spec_id)
-      if (!size.model_filename) return []
       return fixups.map(function(loc, i) {
+        var size = unit_size.data()[loc.spec_id]
+        if (!size.model_filename) return {}
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
         var color
         if (!loc.ok) {
@@ -47,6 +47,7 @@ define([
       //clearPreviews(view)
       puppets.forEach(function(puppet, i) {
         //console.log(puppet)
+        if (!puppet || !puppet.model || !puppet.model.filename) return
         if (previews[i]) {
           puppet.id = previews[i].id
         }

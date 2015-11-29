@@ -24,6 +24,7 @@ define([
     if (n < 1) return
 
     mouse.raycast().then(function(location) {
+      //console.log(location)
       preview.previewUnits3D(mouse.hdeck.view, n, selectedUnit(), location)
     })
   }
@@ -35,7 +36,7 @@ define([
     var army = model.players()[armyIndex()].id
 
     mouse.raycast().then(function(location) {
-      //console.log('parade loc', location)
+      //console.log('parade loc', location, army)
       parade.paradeUnits3D(mouse.hdeck.view, army, location)
     })
   }

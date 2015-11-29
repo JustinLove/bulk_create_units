@@ -6,6 +6,9 @@ define([
   wrap_grid
 ) {
   var distributeUnitLocations = function(view, n, spec_id, center) {
+    if (n < 1) return $.Deferred().resolve([])
+    if (!spec_id || spec_id == '') return $.Deferred().resolve([])
+
     var size = unit_size.updateFootprint(spec_id)
     var locations = wrap_grid(size.footprint, center).take(n*2)
 

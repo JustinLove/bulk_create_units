@@ -2,43 +2,23 @@ define([
   'bulk_create_units/parade_grid',
   'bulk_create_units/plane_wrap',
   'bulk_create_units/distribute_grid',
+  'bulk_create_units/bulk_paste',
 ], function(
   parade_grid,
   projection,
-  distribute_grid
+  distribute_grid,
+  bulk_paste
 ) {
-  var paradeUnits3D = function(view, armyId, center) {
+  var paradeUnits3D = function(view, army_id, center) {
     if (!model.cheatAllowCreateUnit()) return
-
-    var configure = function(fixups) {
-      return fixups.map(function(loc, i) {
-        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
-        return {
-          army: armyId,
-          what: loc.spec_id,
-          planet: loc.planet,
-          location: loc.pos,
-          orientation: loc.orient,
-        }
-      })
-    }
 
     distributeUnitLocations(view, center)
-      .then(configure)
-      .then(createUnits3D)
-  }
-
-  var createUnits3D = function(drops) {
-    if (!model.cheatAllowCreateUnit()) return
-
-    drops.forEach(function(drop) {
-      model.send_message('create_unit', drop)
-    })
+      .then(function(locations) {
+        bulk_paste.pasteUnitLocations(locations, army_id)
+      })
   }
 
   var distributeUnitLocations = function(view, center) {
-    var locations
-
     var stretch = function(locations) {
       var wrap = projection(center)
       locations.forEach(function(item) {
@@ -62,7 +42,7 @@ define([
       .then(stretch)
       .then(fixup)
 
-    return def.promise()
+    return def
   }
 
   return {
