@@ -1,18 +1,11 @@
 define([
   'bulk_create_units/unit_size',
-  'bulk_create_units/distribute_grid',
 ], function(
-  unit_size,
-  distribute_grid
+  unit_size
 ) {
   var previews = []
 
-  var previewUnits3D = function(view, n, spec_id, center) {
-    if (n < 1) return
-    if (!spec_id || spec_id == '') return
-    var size = unit_size.data()[spec_id]
-    if (!size.model_filename) return
-
+  var previewUnitLocations = function(view, locations) {
     var configure = function(fixups) {
       return fixups.map(function(loc, i) {
         var size = unit_size.data()[loc.spec_id]
@@ -58,10 +51,9 @@ define([
       })
     }
 
-    distribute_grid.distributeUnitLocations(view, n, spec_id, center)
-      .then(configure)
-      .then(puppetUnits3D)
+    puppetUnits3D(configure(locations))
   }
+
 
   var clearPreviews = function(view) {
     view.getAllPuppets(true).then(function(puppets) {
@@ -84,7 +76,7 @@ define([
   }
 
   return {
-    previewUnits3D: previewUnits3D,
+    previewUnitLocations: previewUnitLocations,
     clearPreviews: clearPreviews,
   }
 })

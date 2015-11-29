@@ -1,19 +1,6 @@
 define([
-  'bulk_create_units/distribute_grid',
 ], function(
-  distribute_grid
 ) {
-  var pasteUnits3D = function(view, n, spec_id, army_id, center) {
-    if (!model.cheatAllowCreateUnit()) return
-    if (n < 1) return
-    if (!spec_id || spec_id == '') return
-
-    distribute_grid.distributeUnitLocations(view, n, spec_id, center)
-      .then(function(locations) {
-        pasteUnitLocations(locations, army_id)
-      })
-  }
-
   var pasteUnitLocations = function(locations, army_id) {
     var configure = function(fixups) {
       return fixups.map(function(loc, i) {
@@ -40,7 +27,6 @@ define([
   }
 
   return {
-    pasteUnits3D: pasteUnits3D,
     pasteUnitLocations: pasteUnitLocations,
   }
 })
