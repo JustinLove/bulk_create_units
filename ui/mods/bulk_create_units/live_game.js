@@ -1,19 +1,13 @@
 define([
   'bulk_create_units/mouse_tracking',
   'bulk_create_units/unit_size',
-
-  'bulk_create_units/distribute_grid',
-  'bulk_create_units/parade',
-
+  'bulk_create_units/formations',
   'bulk_create_units/bulk_paste',
   'bulk_create_units/preview',
 ], function(
   mouse,
   unit_size,
-
-  distribute_grid,
-  parade,
-
+  formations,
   bulk_paste,
   preview
 ) {
@@ -26,10 +20,11 @@ define([
 
   var previewUnits = function(n) {
     if (n < 1) return
+    if (!selectedUnit() || selectedUnit() == '') return
 
     mouse.raycast().then(function(center) {
       //console.log(center)
-      distribute_grid.distributeUnitLocations(mouse.hdeck.view, n, selectedUnit(), center)
+      formations.grid(mouse.hdeck.view, n, selectedUnit(), center)
         .then(function(locations) {
           preview.previewUnitLocations(mouse.hdeck.view, locations)
         })
@@ -44,7 +39,7 @@ define([
 
     mouse.raycast().then(function(center) {
       //console.log('parade loc', center, army_id)
-      parade.formation(mouse.hdeck.view, center)
+      formations.parade(mouse.hdeck.view, center)
         .then(function(locations) {
           bulk_paste.pasteUnitLocations(locations, army_id)
         })
@@ -54,6 +49,7 @@ define([
   var pasteUnits = function(n) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
+    if (!selectedUnit() || selectedUnit() == '') return
     if (armyIndex() == -1) return
 
     var drop = {
@@ -73,7 +69,7 @@ define([
     if (n < 1) return
     if (!config.what || config.what == '') return
 
-    distribute_grid.distributeUnitLocations(mouse.hdeck.view, n, config.what, center)
+    formations.grid(mouse.hdeck.view, n, config.what, center)
       .then(function(locations) {
         bulk_paste.pasteUnitLocations(locations, config.army)
       })

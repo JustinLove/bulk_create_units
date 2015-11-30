@@ -1,13 +1,11 @@
 define([
   'bulk_create_units/parade_grid',
   'bulk_create_units/plane_wrap',
-  'bulk_create_units/distribute_grid',
 ], function(
   parade_grid,
-  projection,
-  distribute_grid
+  projection
 ) {
-  var paradeFormation = function(view, center) {
+  var paradeFormation = function(center) {
     var stretch = function(locations) {
       var wrap = projection(center)
       locations.forEach(function(item) {
@@ -19,19 +17,7 @@ define([
       return locations
     }
 
-    var def = $.Deferred()
-    var fixup = function(locations) {
-      return distribute_grid.fixupUniform(view,
-          '/pa/units/commanders/imperial_invictus/imperial_invictus.json',
-          center.planet, locations)
-        .then(function(fixups) {def.resolve(fixups)})
-    }
-
-    parade_grid()
-      .then(stretch)
-      .then(fixup)
-
-    return def
+    return parade_grid().then(stretch)
   }
 
   return {

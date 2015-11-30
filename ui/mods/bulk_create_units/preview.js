@@ -8,9 +8,9 @@ define([
   var previewUnitLocations = function(view, locations) {
     var configure = function(fixups) {
       return fixups.map(function(loc, i) {
+        //console.log(loc.ok, loc.desc, loc.pos, loc.orient, loc.spec_id)
         var size = unit_size.data()[loc.spec_id]
         if (!size.model_filename) return {}
-        //console.log(loc.ok, loc.desc, loc.pos, loc.orient)
         var color
         if (!loc.ok) {
           color = [0.8, 0, 0, 0]
