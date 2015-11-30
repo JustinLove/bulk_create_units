@@ -21,14 +21,14 @@ api.settings.definitions.keyboard.settings.bulk_paste_clear = {
   default: 'shift+ctrl+z'
 }
 
-action_sets.hacks.parade_units = function () {
-  if (model.paradeUnits) model.paradeUnits()
+action_sets.hacks.bulk_paste_next_formation = function () {
+  if (model.bulkPastNextFormation) model.bulkPastNextFormation()
 }
-api.settings.definitions.keyboard.settings.parade_units = {
-  title: 'parade units',
+api.settings.definitions.keyboard.settings.bulk_paste_next_formation = {
+  title: 'next formation',
   type: 'keybind',
   set: 'mods',
   display_group: 'mods',
   display_sub_group: 'bulk create units',
-  default: 'alt+shift+ctrl+v'
+  default: 'shift+ctrl+f'
 }

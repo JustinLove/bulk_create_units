@@ -24,24 +24,12 @@ define([
 
     mouse.raycast().then(function(center) {
       //console.log(center)
-      formations.grid(mouse.hdeck.view, n, selectedUnit(), center)
+      if (!center.pos) return
+      inFormation(mouse.hdeck.view, center, n, selectedUnit())
         .then(function(locations) {
+          // two steps above are async, could have changed
+          if (!selectedUnit() || selectedUnit() == '') return
           preview.previewUnitLocations(mouse.hdeck.view, locations)
-        })
-    })
-  }
-
-  var paradeUnits = function() {
-    if (!model.cheatAllowCreateUnit()) return
-    if (armyIndex() == -1) return
-
-    var army_id = model.players()[armyIndex()].id
-
-    mouse.raycast().then(function(center) {
-      //console.log('parade loc', center, army_id)
-      formations.parade(mouse.hdeck.view, center)
-        .then(function(locations) {
-          bulk_paste.pasteUnitLocations(locations, army_id)
         })
     })
   }
@@ -59,6 +47,7 @@ define([
 
     mouse.raycast().then(function(location) {
       //console.log(result)
+      if (!center.pos) return
       pasteUnits3D(n, drop, location)
     })
   }
@@ -69,7 +58,7 @@ define([
     if (n < 1) return
     if (!config.what || config.what == '') return
 
-    formations.grid(mouse.hdeck.view, n, config.what, center)
+    inFormation(mouse.hdeck.view, center, n, config.what)
       .then(function(locations) {
         bulk_paste.pasteUnitLocations(locations, config.army)
       })
@@ -105,11 +94,26 @@ define([
     }
   }
 
+  var currentFormation = 0
+
+  var nextFormation = function() {
+    currentFormation++
+    if (currentFormation >= 3) currentFormation = 0
+  }
+
+  var inFormation = function(view, center, n, spec_id) {
+    switch (currentFormation) {
+      case 0: return formations.grid(view, center, n, spec_id);
+      case 1: return formations.area(view, center, n, spec_id);
+      case 2: return formations.parade(view, center);
+    }
+  }
+
   return {
-    paradeUnits: paradeUnits,
     previewUnits: previewUnits,
     pasteUnits: pasteUnits,
     pasteUnits3D: pasteUnits3D,
+    nextFormation: nextFormation,
     selectedUnit: selectedUnit,
     sandboxExpanded: sandboxExpanded,
     lastHover: lastHover,

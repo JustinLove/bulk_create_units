@@ -23,7 +23,6 @@ require(['bulk_create_units/live_game'], function(bcu) {
   if (!model.pasteUnits || !model.pasteUnits.raycast) {
     model.pasteUnits = bcu.pasteUnits
   }
-  model.paradeUnits = bcu.paradeUnits
   model.pasteUnits3D = bcu.pasteUnits3D
   model.bulkPasteCount = ko.observable(10)
   model.bulkPaste = function() {
@@ -32,6 +31,7 @@ require(['bulk_create_units/live_game'], function(bcu) {
   model.clearPasteUnit = function() {
     bcu.selectedUnit('')
   }
+  model.bulkPastNextFormation = bcu.nextFormation
   var ghost = function() {
     bcu.previewUnits(model.bulkPasteCount())
     setTimeout(ghost, 100)

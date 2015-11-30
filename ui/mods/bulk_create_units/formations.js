@@ -12,7 +12,7 @@ define([
   fixup
 ) {
   var patternScan = function(pattern) {
-    return function(view, n, spec_id, center) {
+    return function(view, center, n, spec_id) {
       if (n < 1) return $.Deferred().resolve([])
       if (!spec_id || spec_id == '') return $.Deferred().resolve([])
       var size = unit_size.updateFootprint(spec_id)
