@@ -2,6 +2,14 @@
 
 Provides a keybinding (shift+ctrl+v by default) that paste multiple units using the create-unit cheat. It also adds a slider (exponential scale) and input box to the sandbox panel to select how many units to paste.
 
+## WIP
+
+Turn off the preview by deselecting a unit (shift+ctrl+z by default).
+
+Next-formation (shift+ctrl+f by default) to change between grid, area, and parade.
+
+Parade formation ignores unit/slider and creates one of each unit (don't forget to kill the ragnarok) Parades are in toolbox formation, it was written with Sandbox Unit Organizer in mind, but the stock toolbox will work if it is currently open.
+
 ## Issues
 
 - PA Sliders are not bidirectional, so updating the text will not change the slider (69721)

@@ -1,3 +1,11 @@
+## 2.1.0 WIP
+
+- Unit paste preview
+- Keybind to deselect curent paste unit
+- Keybind to change formations
+- Area formation
+- Parade formation (one of each)
+
 ## 2.0.1
 
 - Fix for degenerate fixup location for naval units on waterless planet types
