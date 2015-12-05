@@ -28,9 +28,6 @@ define([
               GhostColor: color,
               BuildInfo: [0,size.TEMP_texelinfo,0,0],
             },
-            textures: {
-              Diffuse: "/pa/effects/diffuse_texture.papa"
-            }
           },
         }
       })
