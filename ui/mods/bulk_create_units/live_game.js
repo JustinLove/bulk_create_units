@@ -18,20 +18,22 @@ define([
     return model.playerControlFlags().indexOf(true)
   })
 
-  var previewUnits = function(n) {
-    if (n < 1) return
-    if (!selectedUnit() || selectedUnit() == '') return
+  var previewUnits = function(n, spec_id) {
+    var def = $.Deferred()
+    if (n < 1) return def.resolve(false)
+    if (!spec_id || spec_id == '') return def.resolve(false)
 
     mouse.raycast().then(function(center) {
       //console.log(center)
-      if (!center.pos) return
-      inFormation(mouse.hdeck.view, center, n, selectedUnit())
+      if (!center.pos) return def.resolve(false)
+      inFormation(mouse.hdeck.view, center, n, spec_id)
         .then(function(locations) {
-          // two steps above are async, could have changed
-          if (!selectedUnit() || selectedUnit() == '') return
           preview.previewUnitLocations(mouse.hdeck.view, locations)
+          def.resolve(true)
         })
     })
+
+    return def
   }
 
   var clearPreviews = function() {

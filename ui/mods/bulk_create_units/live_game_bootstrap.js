@@ -43,9 +43,15 @@ require(['bulk_create_units/live_game'], function(bcu) {
   })
   var ghost = function() {
     if (showPreview()) {
-      bcu.previewUnits(model.bulkPasteCount())
+      bcu.previewUnits(model.bulkPasteCount(), bcu.selectedUnit()).then(function() {
+        if (!showPreview()) {
+          bcu.clearPreviews()
+        }
+        setTimeout(ghost, 100)
+      })
+    } else {
+      setTimeout(ghost, 100)
     }
-    setTimeout(ghost, 100)
   }
   ghost()
 
