@@ -34,6 +34,10 @@ define([
     })
   }
 
+  var clearPreviews = function() {
+    preview.clearPreviews(mouse.hdeck.view)
+  }
+
   var pasteUnits = function(n) {
     if (!model.cheatAllowCreateUnit()) return
     if (n < 1) return
@@ -45,10 +49,10 @@ define([
       what: selectedUnit(),
     }
 
-    mouse.raycast().then(function(location) {
-      //console.log(result)
+    mouse.raycast().then(function(center) {
+      //console.log(result, )
       if (!center.pos) return
-      pasteUnits3D(n, drop, location)
+      pasteUnits3D(n, drop, center)
     })
   }
   pasteUnits.raycast = true
@@ -64,29 +68,12 @@ define([
       })
   }
 
-  var lastHover = ko.observable('')
-  var selectedUnit = ko.observable(lastHover())
+  var selectedUnit = ko.observable('')
 
   selectedUnit.subscribe(function(spec) {
-    if (spec == '') {
-      preview.clearPreviews(mouse.hdeck.view)
-    }
     api.Panel.message('sandbox', 'bulkCreateUnitSpec', spec)
     unit_size.load()
   })
-
-  var engineCall = engine.call
-  engine.call = function(method) {
-    var promise = engineCall.apply(this, arguments);
-
-    if (method == 'unit.debug.copy') {
-      selectedUnit(lastHover())
-    } else if (method == 'unit.debug.setSpecId') {
-      selectedUnit(arguments[1])
-    }
-
-    return promise
-  }
 
   var sandboxExpanded = function(open) {
     if (open) {
@@ -111,11 +98,11 @@ define([
 
   return {
     previewUnits: previewUnits,
+    clearPreviews: clearPreviews,
     pasteUnits: pasteUnits,
     pasteUnits3D: pasteUnits3D,
     nextFormation: nextFormation,
     selectedUnit: selectedUnit,
     sandboxExpanded: sandboxExpanded,
-    lastHover: lastHover,
   }
 })

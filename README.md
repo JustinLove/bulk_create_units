@@ -2,9 +2,7 @@
 
 Provides a keybinding (shift+ctrl+v by default) that paste multiple units using the create-unit cheat. It also adds a slider (exponential scale) and input box to the sandbox panel to select how many units to paste.
 
-## WIP
-
-Turn off the preview by deselecting a unit (shift+ctrl+z by default).
+Paste formation is previewed. Preview turns on when changing unit, number, or formation, and turns off after a paste. You can manually toggle the preview if you want the other state (shift+ctrl+z by default).
 
 Next-formation (shift+ctrl+f by default) to change between grid, area, and parade.
 

@@ -1,7 +1,7 @@
 ## 2.1.0 WIP
 
 - Unit paste preview
-- Keybind to deselect curent paste unit
+- Keybind to toggle preview
 - Keybind to change formations
 - Area formation
 - Parade formation (one of each)

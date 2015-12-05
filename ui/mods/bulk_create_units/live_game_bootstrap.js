@@ -27,27 +27,61 @@ require(['bulk_create_units/live_game'], function(bcu) {
   model.bulkPasteCount = ko.observable(10)
   model.bulkPaste = function() {
     model.pasteUnits(model.bulkPasteCount())
+    showPreview(false)
   }
-  model.clearPasteUnit = function() {
-    bcu.selectedUnit('')
+  model.bulkPastePreviewToggle = function() {
+    showPreview(!showPreview())
   }
-  model.bulkPastNextFormation = bcu.nextFormation
+  model.bulkPastNextFormation = function() {
+    bcu.nextFormation()
+    showPreview(true)
+  }
+
+  var showPreview = ko.observable(false)
+  showPreview.subscribe(function(show) {
+    if (!show) bcu.clearPreviews()
+  })
   var ghost = function() {
-    bcu.previewUnits(model.bulkPasteCount())
+    if (showPreview()) {
+      bcu.previewUnits(model.bulkPasteCount())
+    }
     setTimeout(ghost, 100)
   }
   ghost()
+
+  model.bulkPasteCount.subscribe(function(count) {
+    showPreview(true)
+  })
+  bcu.selectedUnit.subscribe(function(spec) {
+    showPreview(spec != '')
+  })
 
   handlers.bulk_paste_count = model.bulkPasteCount
   handlers.bulkCreateUnitSelected = bcu.selectedUnit
   handlers.bulkCreateUnitSandboxExpanded = bcu.sandboxExpanded
 
+  var lastHover = ko.observable('')
   var liveGameHover = handlers.hover
   handlers.hover = function(payload) {
     liveGameHover(payload)
 
     if (payload) {
-      bcu.lastHover(payload.spec_id || '')
+      lastHover(payload.spec_id || '')
     }
+  }
+
+  var engineCall = engine.call
+  engine.call = function(method) {
+    var promise = engineCall.apply(this, arguments);
+
+    if (method == 'unit.debug.copy') {
+      bcu.selectedUnit(lastHover())
+    } else if (method == 'unit.debug.paste') {
+      showPreview(false)
+    } else if (method == 'unit.debug.setSpecId') {
+      bcu.selectedUnit(arguments[1])
+    }
+
+    return promise
   }
 })
