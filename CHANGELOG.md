@@ -5,6 +5,7 @@
 - Keybind to change formations
 - Area formation
 - Parade formation (one of each)
+- Stop using `global_mod_list` for keybinds
 
 ## 2.0.1
 

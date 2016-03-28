@@ -10,10 +10,11 @@
   "identifier": "com.wondible.pa.bulk_create_units",
   "priority": 100,
   "scenes": {
-    "global_mod_list": [
+    "settings": [
       "coui://ui/mods/bulk_create_units/keybinds.js"
     ],
     "live_game": [
+      "coui://ui/mods/bulk_create_units/keybinds.js",
       "coui://ui/mods/bulk_create_units/unit_info_parser.js",
       "coui://ui/mods/bulk_create_units/live_game_bootstrap.js"
     ],
