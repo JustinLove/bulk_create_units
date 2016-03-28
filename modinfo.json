@@ -14,7 +14,7 @@
       "coui://ui/mods/bulk_create_units/keybinds.js"
     ],
     "live_game": [
-      "coui://ui/mods/bulk_create_units/unitInfoParser.js",
+      "coui://ui/mods/bulk_create_units/unit_info_parser.js",
       "coui://ui/mods/bulk_create_units/live_game_bootstrap.js"
     ],
     "live_game_sandbox": [
