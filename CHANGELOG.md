@@ -1,4 +1,4 @@
-## 2.1.0 WIP
+## 2.1.0
 
 - Unit paste preview
 - Keybind to toggle preview

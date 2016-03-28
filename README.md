@@ -1,6 +1,6 @@
 # Bulk Create Units
 
-Provides a keybinding (shift+ctrl+v by default) that paste multiple units using the create-unit cheat. It also adds a slider (exponential scale) and input box to the sandbox panel to select how many units to paste.
+Provides a keybinding (shift+ctrl+v by default) that paste multiple units using the sandbox mode. It also adds a slider (exponential scale) and input box to the sandbox panel to select how many units to paste.
 
 Paste formation is previewed. Preview turns on when changing unit, number, or formation, and turns off after a paste. You can manually toggle the preview if you want the other state (shift+ctrl+z by default).
 
