@@ -1,12 +1,13 @@
 {
   "author": "wondible, Cola_Colin",
   "build": "89755",
-  "category": ["sandbox", "ui", "titans"],
+  "category": ["sandbox", "titans"],
   "context": "client",
   "date": "2016/03/28",
   "description": "Adds hotkey for pasting 10 or N units in sandbox mode.",
   "display_name": "Bulk Create Units",
   "forum": "https://forums.uberent.com/threads/rel-bulk-create-units.62492/",
+  "icon": "http://wondible.com/pa/icons/bulk_create_units.png",
   "identifier": "com.wondible.pa.bulk_create_units",
   "priority": 100,
   "scenes": {
