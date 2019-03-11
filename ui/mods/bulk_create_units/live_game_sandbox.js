@@ -24,7 +24,7 @@
   var addControls = function() {
     $.get(controls, function(html) {
       $html = $(html)
-      $('.div_sandbox_simcontrol_cont').append($html)
+      $('#sandbox-controls').append($html)
       ko.applyBindings(model, $html.get(0))
     })
   }

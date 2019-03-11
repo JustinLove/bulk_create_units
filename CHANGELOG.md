@@ -1,3 +1,7 @@
+## 2.1.1
+
+- Fix compatibility with sandbox changes circa 113034
+
 ## 2.1.0
 
 - Unit paste preview
