@@ -4,8 +4,9 @@ define([
   unit_size
 ) {
   var previews = []
+  var gamma = 2.2/1.0
 
-  var previewUnitLocations = function(view, locations) {
+  var previewUnitLocations = function(view, locations, playerColor) {
     var configure = function(fixups) {
       return fixups.map(function(loc, i) {
         //console.log(loc.ok, loc.desc, loc.pos, loc.orient, loc.spec_id)
@@ -16,6 +17,13 @@ define([
           color = [0.8, 0, 0, 0]
         } else if (loc.desc) {
           color = [0.8, 0.2, 0.2, 0]
+        } else if (playerColor && playerColor.length == 3) {
+          color = [
+            Math.pow(playerColor[0]/256, gamma),
+            Math.pow(playerColor[1]/256, gamma),
+            Math.pow(playerColor[2]/256, gamma),
+            0
+          ]
         } else {
           color = [0.6, 0.6, 0.6, 0]
         }

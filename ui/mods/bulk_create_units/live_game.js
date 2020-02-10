@@ -23,12 +23,15 @@ define([
     if (n < 1) return def.resolve(false)
     if (!spec_id || spec_id == '') return def.resolve(false)
 
+    var player = model.players()[armyIndex()]
+    if (!player) return def.resolve(false)
+
     mouse.raycast().then(function(center) {
       //console.log(center)
       if (!center.pos) return def.resolve(false)
       inFormation(mouse.hdeck.view, center, n, spec_id)
         .then(function(locations) {
-          preview.previewUnitLocations(mouse.hdeck.view, locations)
+          preview.previewUnitLocations(mouse.hdeck.view, locations, player && player.primary_color)
           def.resolve(true)
         })
     })

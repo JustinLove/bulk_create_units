@@ -1,3 +1,7 @@
+## 2.2.0
+
+- Previews are player colored
+
 ## 2.1.1
 
 - Fix compatibility with sandbox changes circa 113034
