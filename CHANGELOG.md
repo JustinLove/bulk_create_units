@@ -1,6 +1,7 @@
 ## 2.2.0
 
 - Previews are player colored
+- Fix preview breakdown if non unit-list units were selected
 
 ## 2.1.1
 

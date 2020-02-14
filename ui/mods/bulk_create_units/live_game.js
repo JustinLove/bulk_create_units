@@ -29,12 +29,23 @@ define([
     mouse.raycast().then(function(center) {
       //console.log(center)
       if (!center.pos) return def.resolve(false)
+      try {
       inFormation(mouse.hdeck.view, center, n, spec_id)
         .then(function(locations) {
+          try {
           preview.previewUnitLocations(mouse.hdeck.view, locations, player && player.primary_color)
+          } catch(e) {
+            console.log('preview inFormation catch', e)
+            def.resolve(false)
+            return
+          }
           def.resolve(true)
-        })
-    })
+        }, function() {console.log('inFormation', arguments)})
+      } catch(e) {
+        console.log('preview raycast catch', e)
+        def.resolve(false)
+      }
+    }, function() {console.log('preview raycast fail')})
 
     return def
   }
@@ -58,7 +69,7 @@ define([
       //console.log(result, )
       if (!center.pos) return
       pasteUnits3D(n, drop, center)
-    })
+    }, function() {console.log('paste raycast fail')})
   }
   pasteUnits.raycast = true
 
@@ -70,7 +81,7 @@ define([
     inFormation(mouse.hdeck.view, center, n, config.what)
       .then(function(locations) {
         bulk_paste.pasteUnitLocations(locations, config.army)
-      })
+      }, function() {console.log('past inFormation fail')})
   }
 
   var selectedUnit = ko.observable('')
@@ -98,6 +109,7 @@ define([
       case 0: return formations.grid(view, center, n, spec_id);
       case 1: return formations.area(view, center, n, spec_id);
       case 2: return formations.parade(view, center);
+      default: throw "unknown formation " + currentFormation.toString()
     }
   }
 

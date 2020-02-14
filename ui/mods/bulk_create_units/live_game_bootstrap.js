@@ -48,7 +48,7 @@ require(['bulk_create_units/live_game'], function(bcu) {
           bcu.clearPreviews()
         }
         setTimeout(ghost, 100)
-      })
+      }, function() {console.log('ghost fail', arguments)})
     } else {
       setTimeout(ghost, 100)
     }
