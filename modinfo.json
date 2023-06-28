@@ -1,9 +1,9 @@
 {
   "author": "wondible, Cola_Colin",
-  "build": "113044",
+  "build": "116982",
   "category": ["sandbox", "titans"],
   "context": "client",
-  "date": "2020/02/14",
+  "date": "2023/06/28",
   "description": "Adds hotkey for pasting 10 or N units in sandbox mode.",
   "display_name": "Bulk Create Units",
   "forum": "https://forums.uberent.com/threads/rel-bulk-create-units.62492/",
@@ -27,5 +27,5 @@
     ]
   },
   "signature": "not yet implemented",
-  "version": "2.2.0"
+  "version": "2.2.1"
 }
