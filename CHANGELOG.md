@@ -1,3 +1,7 @@
+## 2.2.1
+
+- fixes duplicated bulk paste bar every time you open and close sandbox menu which stops you closing or opening it - Thanks Ferret Master
+
 ## 2.2.0
 
 - Previews are player colored
